@@ -456,10 +456,13 @@ render();
 ====================================================== */
 (function(){
   const t = document.getElementById('ticker');
+  const original = t.innerHTML;
+  t.innerHTML = original + original;
   let pos = 0;
+  const half = t.scrollWidth / 2;
   setInterval(function(){
     pos -= 0.5;
-    if(Math.abs(pos) >= t.scrollWidth / 2) pos = 0;
+    if(Math.abs(pos) >= half) pos = 0;
     t.style.transform = 'translateX(' + pos + 'px)';
   }, 16);
 })();
