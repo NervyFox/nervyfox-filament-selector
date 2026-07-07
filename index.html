@@ -55,12 +55,17 @@
   .progress div{flex:1;border-right:2px solid var(--ink);}
   .progress div:last-child{border-right:none;}
 
-  /* ANIMATION TRANSITION */
-  @keyframes fadeSlideIn {
-    from { opacity:0; transform:translateY(12px); }
-    to   { opacity:1; transform:translateY(0); }
+  /* ANIMATION — zoom out/in sur navigation uniquement */
+  @keyframes zoomIn {
+    from { opacity:0; transform:scale(.94); }
+    to   { opacity:1; transform:scale(1); }
   }
-  .step-animate { animation: fadeSlideIn .25s ease forwards; }
+  @keyframes zoomOut {
+    from { opacity:1; transform:scale(1); }
+    to   { opacity:0; transform:scale(.94); }
+  }
+  .step-zoom-in  { animation: zoomIn  .22s ease forwards; }
+  .step-zoom-out { animation: zoomOut .18s ease forwards; }
 
   /* CARDS */
   .grid{display:grid;gap:16px;}
@@ -179,7 +184,7 @@
    DONNÉES
 ====================================================== */
 
-const VERSION = 'V0.2.0';
+const VERSION = 'V0.2.1';
 
 const stepMeta = {
   1: { eyebrow:"Étape 1/5", color:'#F89B6C', title:"C'est quoi comme objet ?",          subtitle:"Choisis ce qui décrit le mieux ce que tu veux imprimer." },
@@ -311,6 +316,7 @@ function buildRecapTags(type, env, constraints, finition, level) {
 ====================================================== */
 
 let state = { step:1, type:null, env:null, constraints:[], finition:null, level:null };
+let isNavigating = false;
 
 function canProceed() {
   const { step, type, env, constraints, finition, level } = state;
@@ -333,20 +339,32 @@ function toggleConstraint(id) {
   else if (state.constraints.length < 3) state.constraints = [...state.constraints, id];
   render();
 }
+function navigate(newStep) {
+  const app = document.getElementById('app');
+  const wrapper = app.firstElementChild;
+  if (!wrapper) { state.step = newStep; render(); return; }
+  // Zoom out sur le contenu actuel
+  wrapper.classList.add('step-zoom-out');
+  setTimeout(function(){
+    state.step = newStep;
+    isNavigating = true;
+    render();
+    isNavigating = false;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }, 180);
+}
 function next() {
   if (!canProceed()) return;
-  state.step = Math.min(6, state.step + 1);
-  window.scrollTo({top:0,behavior:'smooth'});
-  render();
+  navigate(Math.min(6, state.step + 1));
 }
 function back() {
-  state.step = Math.max(1, state.step - 1);
-  window.scrollTo({top:0,behavior:'smooth'});
-  render();
+  navigate(Math.max(1, state.step - 1));
 }
 function restart() {
   state = { step:1, type:null, env:null, constraints:[], finition:null, level:null };
+  isNavigating = true;
   render();
+  isNavigating = false;
 }
 
 /* ======================================================
@@ -412,7 +430,7 @@ function render() {
     const barColor = result === 'ASA' ? '#F2641E' : f.color;
 
     app.innerHTML = `
-      <div class="step-animate">
+      <div class="${isNavigating?'step-zoom-in':''}">
 
         <div class="recap">${buildRecapTags(type, env, constraints, finition, level)}</div>
 
@@ -476,7 +494,7 @@ function render() {
   }
 
   app.innerHTML = `
-    <div class="step-animate">
+    <div class="${isNavigating?'step-zoom-in':''}">
       <div class="step-head">
         <div class="eyebrow" style="color:${meta.color}">${meta.eyebrow}</div>
         <div class="title">${meta.title}</div>
