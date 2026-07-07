@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NervyFox — Sélecteur de filament</title>
+<meta name="description" content="Trouve le bon filament 3D pour ton projet en 4 étapes. Guide gratuit par NervyFox.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F8F0E3;
+    --orange:#F2641E;
+    --violet:#5B22D6;
+    --rose:#F8556B;
+    --orange-doux:#F89B6C;
+    --ink:#1A1510;
+    --selected-bg:#FBE6D8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    min-height:100vh;
+    background-color:var(--bg);
+    background-image:radial-gradient(rgba(26,21,16,.10) 1.4px,transparent 1.4px);
+    background-size:24px 24px;
+    font-family:'Space Grotesk',sans-serif;
+    color:var(--ink);
+  }
+  a{color:var(--orange)}
+  a:hover{color:var(--ink)}
+  .wrap{max-width:820px;margin:0 auto;padding:56px 24px 40px;}
+
+  .masthead{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    padding:22px 24px;border-bottom:2.5px solid var(--ink);background:var(--bg);
+  }
+  .masthead img{height:34px;width:auto;display:block;}
+  .masthead .tag{font:700 11px/1 'Space Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#9A8C76;}
+
+  .step-head{text-align:center;margin-bottom:36px;}
+  .eyebrow{font:700 12px/1 'Space Mono',monospace;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;}
+  .title{font-family:'Bagel Fat One',cursive;font-size:40px;line-height:1.08;margin-bottom:14px;}
+  .subtitle{font-size:16px;color:#5C5343;max-width:520px;margin:0 auto;}
+
+  .progress{display:flex;max-width:420px;margin:0 auto 44px;height:14px;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--bg);}
+  .progress div{flex:1;border-right:2px solid var(--ink);}
+  .progress div:last-child{border-right:none;}
+
+  .grid{display:grid;gap:16px;}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr);}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr);max-width:600px;margin:0 auto;}
+
+  .card{
+    position:relative;border:2.5px solid var(--ink);border-radius:16px;background:#fff;
+    padding:24px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;
+    text-align:center;cursor:pointer;transition:transform .12s ease;
+  }
+  .card:hover{transform:translateY(-2px);}
+  .card.selected{background:var(--selected-bg);box-shadow:5px 5px 0 var(--ink);}
+  .card.disabled{opacity:.4;cursor:not-allowed;}
+  .card.disabled:hover{transform:none;}
+  .card .icon{font-size:26px;line-height:1;}
+  .card .label{font-weight:700;font-size:14.5px;line-height:1.3;}
+  .card .badge{
+    position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;
+    background:var(--orange);border:2.5px solid var(--ink);display:flex;align-items:center;
+    justify-content:center;font-weight:700;font-size:13px;color:var(--ink);
+  }
+
+  .card.priority{padding:30px 20px;border-radius:18px;gap:12px;}
+  .card.priority .icon{font-size:30px;}
+  .card.priority .label{font-size:16.5px;}
+
+  .card.level{padding:28px 18px;border-radius:18px;gap:10px;}
+  .card.level .label{font-size:17px;}
+  .card.level .hint{font-size:13px;color:#8A7C64;line-height:1.4;}
+
+  .constraint-helper{text-align:center;margin-bottom:18px;font:700 12px/1 'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#5C5343;}
+
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:48px;}
+  .btn-back{
+    display:inline-flex;align-items:center;gap:8px;border:2.5px solid var(--ink);border-radius:999px;
+    padding:14px 26px;font-weight:700;font-size:15px;cursor:pointer;background:#fff;
+    font-family:inherit;
+  }
+  .btn-back:hover{background:var(--bg);}
+  .btn-back.hidden{visibility:hidden;}
+  .btn-next{
+    display:inline-flex;align-items:center;gap:9px;border:2.5px solid var(--ink);border-radius:999px;
+    padding:15px 32px;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;
+    background:#EFE6D6;color:#B7AA92;box-shadow:none;
+  }
+  .btn-next.ok{background:var(--orange);color:var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;}
+
+  .result-eyebrow{font:700 12px/1 'Space Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--violet);margin-bottom:16px;text-align:center;}
+  .result-badge{
+    display:inline-flex;align-items:center;gap:10px;border:2.5px solid var(--ink);border-radius:999px;
+    padding:14px 30px;font-family:'Bagel Fat One',cursive;font-size:24px;box-shadow:5px 5px 0 var(--ink);
+    margin-bottom:26px;
+  }
+  .result-wrap{text-align:center;}
+  .result-title{font-family:'Bagel Fat One',cursive;font-size:36px;line-height:1.08;margin:0 auto 20px;max-width:620px;}
+  .result-explanation{font-size:16.5px;line-height:1.62;color:#3A332A;max-width:600px;margin:0 auto 40px;}
+
+  .alt-box{border:2.5px solid var(--ink);border-radius:20px;background:#fff;padding:28px 30px;max-width:640px;margin:0 auto 40px;text-align:left;box-shadow:6px 6px 0 rgba(26,21,16,.12);}
+  .alt-box-title{font-family:'Bagel Fat One',cursive;font-size:21px;margin-bottom:16px;}
+  .alt-row{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1.5px solid rgba(26,21,16,.12);}
+  .alt-row:last-child{border-bottom:none;}
+  .alt-dot{flex:none;width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);margin-top:4px;}
+  .alt-name{font-weight:700;font-size:15px;margin-bottom:4px;}
+  .alt-reason{font-size:14px;line-height:1.5;color:#5C5343;}
+
+  .cta{
+    display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--ink);
+    border:2.5px solid var(--ink);border-radius:999px;padding:18px 38px;font-weight:700;font-size:18px;
+    box-shadow:5px 5px 0 var(--ink);cursor:pointer;margin-bottom:24px;text-decoration:none;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .cta:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink);}
+  .restart{font:700 12px/1 'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5C5343;border-bottom:2px solid var(--ink);padding-bottom:3px;cursor:pointer;}
+
+  .footer{text-align:center;margin-top:64px;padding-top:24px;border-top:2px solid rgba(26,21,16,.12);}
+  .footer img{height:22px;width:auto;margin-bottom:10px;display:inline-block;}
+  .footer .tag{font:700 10px/1.5 'Space Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#9A8C76;}
+
+  @media (max-width:640px){
+    .grid.cols-4{grid-template-columns:repeat(2,1fr);}
+    .grid.cols-3{grid-template-columns:repeat(2,1fr);}
+    .grid.cols-2{grid-template-columns:1fr;}
+    .title{font-size:30px;}
+    .result-title{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="masthead">
+    <img src="assets/logo-wordmark.png" alt="NervyFox">
+    <div class="tag">Hub Maker · Sélecteur de filament</div>
+  </div>
+
+  <div class="wrap">
+    <div id="app"></div>
+  </div>
+
+<script>
+/* ============ DONNÉES (logique validée) ============ */
+
+const usageDefs = [
+  { id: 'deco', label: "Objet décoratif", icon: '✦' },
+  { id: 'int', label: "Pièce fonctionnelle intérieur", icon: '⌂' },
+  { id: 'ext', label: "Pièce fonctionnelle extérieur", icon: '☀' },
+  { id: 'proto', label: "Prototype visuel", icon: '◐' },
+  { id: 'flex', label: "Pièce flexible ou souple", icon: '∿' },
+  { id: 'heat', label: "Pièce exposée à la chaleur", icon: '♨' },
+  { id: 'water', label: "Pièce en contact avec l'eau", icon: '≈' },
+  { id: 'tech', label: "Pièce technique haute résistance", icon: '⚙' }
+];
+
+const constraintDefs = [
+  { id: 'easy', label: "Facilité d'impression", icon: '✓' },
+  { id: 'mech', label: "Résistance mécanique", icon: '⚙' },
+  { id: 'heat', label: "Résistance à la chaleur", icon: '♨' },
+  { id: 'humidity', label: "Résistance à l'humidité", icon: '≈' },
+  { id: 'flex', label: "Flexibilité", icon: '∿' },
+  { id: 'surface', label: "Bon rendu de surface", icon: '◐' },
+  { id: 'warp', label: "Faible risque de warping", icon: '⬡' },
+  { id: 'cost', label: "Coût raisonnable", icon: '¤' },
+  { id: 'uv', label: "Résistance UV", icon: '☀' }
+];
+
+const priorityDefs = [
+  { id: 'simple', label: "Simplicité avant tout", icon: '✓' },
+  { id: 'perf', label: "Meilleure performance", icon: '⚡' },
+  { id: 'visual', label: "Meilleur rendu visuel", icon: '◐' },
+  { id: 'value', label: "Meilleur rapport qualité/prix", icon: '¤' }
+];
+
+const levelDefs = [
+  { id: 'total', label: "Débutant complet", hint: "Je n'ai jamais lancé une impression." },
+  { id: 'some', label: "Quelques impressions déjà faites", hint: "Je connais les bases, sans plus." },
+  { id: 'exp', label: "Expérimenté", hint: "Je règle ma machine moi-même." }
+];
+
+const filamentDefs = {
+  pla: { name: 'PLA', color: '#F2641E', text: '#1A1510', easy: 5, mech: 2, heat: 1, humidity: 2, flex: 1, surface: 5, warp: 5, cost: 5, uv: 2,
+    core: "Le PLA est le filament le plus simple à imprimer : il ne bouge pas en refroidissant, donne une belle finition et pardonne les petits réglages imparfaits.",
+    whyNot: "Facile et joli à imprimer, mais il ramollit vite à la chaleur et n'aime pas les chocs répétés.",
+    affiliateLink: "" },
+  petg: { name: 'PETG', color: '#5B22D6', text: '#F8F0E3', easy: 4, mech: 4, heat: 3, humidity: 4, flex: 2, surface: 4, warp: 4, cost: 4, uv: 3,
+    core: "Le PETG garde presque la simplicité du PLA, mais encaisse bien mieux les chocs, l'humidité et les petites variations de température.",
+    whyNot: "Solide et résistant à l'eau, mais un peu plus capricieux à imprimer que le PLA, avec un rendu moins mat.",
+    affiliateLink: "" },
+  abs: { name: 'ABS', color: '#F8556B', text: '#1A1510', easy: 2, mech: 4, heat: 4, humidity: 3, flex: 1, surface: 3, warp: 1, cost: 4, uv: 2,
+    core: "L'ABS résiste bien à la chaleur et aux chocs, un vrai choix technique — il demande juste un peu plus de vigilance côté réglages.",
+    whyNot: "Costaud et résistant à la chaleur, mais il se déforme facilement en imprimant (warping) et demande une imprimante fermée.",
+    affiliateLink: "" },
+  tpu: { name: 'TPU', color: '#F89B6C', text: '#1A1510', easy: 2, mech: 3, heat: 2, humidity: 3, flex: 5, surface: 3, warp: 4, cost: 3, uv: 2,
+    core: "Le TPU est un filament souple et increvable, pensé pour tout ce qui doit plier, amortir ou s'étirer sans casser.",
+    whyNot: "Increvable et souple, mais totalement inadapté si ta pièce doit rester rigide.",
+    affiliateLink: "" },
+  asa: { name: 'ASA', color: '#1A1510', text: '#F8F0E3', easy: 2, mech: 4, heat: 4, humidity: 4, flex: 1, surface: 3, warp: 3, cost: 3, uv: 5,
+    core: "L'ASA a les mêmes qualités que l'ABS, avec en plus une vraie résistance aux UV et aux intempéries — parfait pour l'extérieur.",
+    whyNot: "Champion du soleil et de l'extérieur, mais plus cher et plus technique à imprimer que nécessaire pour un usage simple.",
+    affiliateLink: "" }
+};
+
+const usageWeights = {
+  deco: { surface: 3, easy: 2 },
+  int: { mech: 3, easy: 1 },
+  ext: { uv: 3, heat: 2, mech: 2 },
+  proto: { easy: 3, surface: 2 },
+  flex: { flex: 5 },
+  heat: { heat: 4 },
+  water: { humidity: 4 },
+  tech: { mech: 4, heat: 2 }
+};
+
+const priorityWeights = {
+  simple: { easy: 3, warp: 1 },
+  perf: { mech: 2, heat: 1, uv: 1 },
+  visual: { surface: 3 },
+  value: { cost: 3 }
+};
+
+const stepMeta = {
+  1: { eyebrow: "Étape 1/4", color: '#F89B6C', title: "C'est pour quoi, ce truc ?", subtitle: "Choisis l'usage qui correspond le mieux à ta pièce." },
+  2: { eyebrow: "Étape 2/4", color: '#F8556B', title: "Qu'est-ce qui compte pour toi ?", subtitle: "Choisis 1 à 3 contraintes importantes pour cette pièce." },
+  3: { eyebrow: "Étape 3/4", color: '#5B22D6', title: "Et si tu devais n'en garder qu'une ?", subtitle: "Ta priorité numéro un pour ce projet." },
+  4: { eyebrow: "Étape 4/4", color: '#F2641E', title: "T'en es où avec l'impression 3D ?", subtitle: "Ça nous aide à ne pas te compliquer la vie." }
+};
+
+/* ============ ETAT ============ */
+
+let state = { step: 1, usage: null, constraints: [], priority: null, level: null };
+
+function findLabel(defs, id){ const f = defs.find(d => d.id === id); return f ? f.label : ''; }
+
+function canProceed(step, usage, constraints, priority, level){
+  if (step === 1) return !!usage;
+  if (step === 2) return constraints.length >= 1;
+  if (step === 3) return !!priority;
+  if (step === 4) return !!level;
+  return true;
+}
+
+function computeResult(usage, constraints, priority, level){
+  const weights = {};
+  const add = (obj) => { for (const k in obj) weights[k] = (weights[k] || 0) + obj[k]; };
+  if (usage && usageWeights[usage]) add(usageWeights[usage]);
+  constraints.forEach(c => add({ [c]: 2 }));
+  if (priority && priorityWeights[priority]) add(priorityWeights[priority]);
+  let malus = 0;
+  if (level === 'total') { add({ easy: 3 }); malus = 9; }
+  else if (level === 'some') { add({ easy: 1 }); malus = 3; }
+
+  const dims = ['easy', 'mech', 'heat', 'humidity', 'flex', 'surface', 'warp', 'cost', 'uv'];
+  const ids = ['pla', 'petg', 'abs', 'tpu', 'asa'];
+  const scores = {};
+  ids.forEach(id => {
+    const prof = filamentDefs[id];
+    let score = 0;
+    dims.forEach(d => { score += (weights[d] || 0) * prof[d]; });
+    if (malus > 0 && prof.easy < 3) score -= malus;
+    scores[id] = score;
+  });
+  let topId = ids[0];
+  ids.forEach(id => { if (scores[id] > scores[topId]) topId = id; });
+  return { topId, scores };
+}
+
+/* ============ ACTIONS ============ */
+
+function selectUsage(id){ state.usage = id; render(); }
+function selectPriority(id){ state.priority = id; render(); }
+function selectLevel(id){ state.level = id; render(); }
+function toggleConstraint(id){
+  const has = state.constraints.includes(id);
+  if (has) state.constraints = state.constraints.filter(c => c !== id);
+  else if (state.constraints.length < 3) state.constraints = [...state.constraints, id];
+  render();
+}
+function next(){
+  if (!canProceed(state.step, state.usage, state.constraints, state.priority, state.level)) return;
+  state.step = Math.min(5, state.step + 1);
+  window.scrollTo({top:0, behavior:'smooth'});
+  render();
+}
+function back(){
+  state.step = Math.max(1, state.step - 1);
+  window.scrollTo({top:0, behavior:'smooth'});
+  render();
+}
+function restart(){
+  state = { step: 1, usage: null, constraints: [], priority: null, level: null };
+  render();
+}
+
+/* ============ RENDU ============ */
+
+function render(){
+  const app = document.getElementById('app');
+  const step = state.step;
+  const { usage, constraints, priority, level } = state;
+
+  if (step <= 4){
+    const meta = stepMeta[step];
+    const proceedOk = canProceed(step, usage, constraints, priority, level);
+    const progressColors = ['#F89B6C', '#F8556B', '#5B22D6', '#F2641E'];
+
+    let stepHtml = '';
+    if (step === 1){
+      stepHtml = `<div class="grid cols-4">` + usageDefs.map(o => cardHtml(o, usage === o.id, `selectUsage('${o.id}')`)).join('') + `</div>`;
+    } else if (step === 2){
+      const atMax = constraints.length >= 3;
+      stepHtml = `<div class="constraint-helper">${constraints.length}/3 sélectionnées · choisis-en 1 à 3</div>
+        <div class="grid cols-3">` + constraintDefs.map(o => {
+          const selected = constraints.includes(o.id);
+          const disabled = !selected && atMax;
+          return cardHtml(o, selected, disabled ? '' : `toggleConstraint('${o.id}')`, disabled);
+        }).join('') + `</div>`;
+    } else if (step === 3){
+      stepHtml = `<div class="grid cols-2">` + priorityDefs.map(o => cardHtml(o, priority === o.id, `selectPriority('${o.id}')`, false, 'priority')).join('') + `</div>`;
+    } else if (step === 4){
+      stepHtml = `<div class="grid cols-3">` + levelDefs.map(o => levelCardHtml(o, level === o.id)).join('') + `</div>`;
+    }
+
+    app.innerHTML = `
+      <div class="step-head">
+        <div class="eyebrow" style="color:${meta.color}">${meta.eyebrow}</div>
+        <div class="title">${meta.title}</div>
+        <div class="subtitle">${meta.subtitle}</div>
+      </div>
+      <div class="progress">${progressColors.map((c,i) => `<div style="background:${step >= i+1 ? c : 'var(--bg)'}"></div>`).join('')}</div>
+      ${stepHtml}
+      <div class="nav">
+        <div class="btn-back ${step === 1 ? 'hidden' : ''}" onclick="back()">← Retour</div>
+        <div class="btn-next ${proceedOk ? 'ok' : ''}" onclick="next()">${step === 4 ? 'Voir mon résultat →' : 'Suivant →'}</div>
+      </div>
+      ${footerHtml()}
+    `;
+  } else {
+    const { topId } = computeResult(usage, constraints, priority, level);
+    const top = filamentDefs[topId];
+    const usageLabel = findLabel(usageDefs, usage);
+    const priorityLabel = findLabel(priorityDefs, priority);
+    let explanation = top.core + ` Vu que tu pars sur « ${usageLabel} » et que ta priorité est « ${priorityLabel} », c'est le choix le plus logique.`;
+    if (level === 'total' && topId !== 'pla' && topId !== 'petg') {
+      explanation += " Petit conseil : comme c'est ton tout premier contact avec l'impression 3D, prévois un peu plus de patience côté réglages qu'avec un PLA classique.";
+    }
+    const otherIds = ['pla', 'petg', 'abs', 'tpu', 'asa'].filter(id => id !== topId);
+    const hasLink = !!(top.affiliateLink && top.affiliateLink.trim() !== '');
+
+    app.innerHTML = `
+      <div class="result-wrap">
+        <div class="result-eyebrow">Ton résultat</div>
+        <div class="result-badge" style="background:${top.color};color:${top.text}">${top.name}</div>
+        <div class="result-title">C'est le filament qu'il te faut.</div>
+        <div class="result-explanation">${explanation}</div>
+      </div>
+      <div class="alt-box">
+        <div class="alt-box-title">Pourquoi pas les autres ?</div>
+        ${otherIds.map(id => {
+          const f = filamentDefs[id];
+          return `<div class="alt-row">
+            <span class="alt-dot" style="background:${f.color}"></span>
+            <div><div class="alt-name">${f.name}</div><div class="alt-reason">${f.whyNot}</div></div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="result-wrap">
+        <a class="cta" href="${hasLink ? top.affiliateLink : '#'}" target="${hasLink ? '_blank' : '_self'}" rel="noopener" onclick="${hasLink ? '' : 'return false;'}">Voir le filament recommandé →</a>
+        <div><span class="restart" onclick="restart()">↺ Refaire le test</span></div>
+      </div>
+      ${footerHtml()}
+    `;
+  }
+}
+
+function cardHtml(o, selected, onclick, disabled=false, variant=''){
+  return `<div class="card ${variant} ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" ${onclick ? `onclick="${onclick}"` : ''}>
+    ${selected ? '<div class="badge">✓</div>' : ''}
+    <div class="icon">${o.icon}</div>
+    <div class="label">${o.label}</div>
+  </div>`;
+}
+
+function levelCardHtml(o, selected){
+  return `<div class="card level ${selected ? 'selected' : ''}" onclick="selectLevel('${o.id}')">
+    ${selected ? '<div class="badge">✓</div>' : ''}
+    <div class="label">${o.label}</div>
+    <div class="hint">${o.hint}</div>
+  </div>`;
+}
+
+function footerHtml(){
+  return `<div class="footer">
+    <img src="assets/logo-pill.png" alt="">
+    <div class="tag">NervyFox · Hub Maker · Designed with a 70s brain</div>
+  </div>`;
+}
+
+render();
+</script>
+</body>
+</html>
