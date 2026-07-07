@@ -36,14 +36,42 @@
   .ticker-wrap{background:var(--ink);padding:7px 0;white-space:nowrap;overflow:hidden;}
   .ticker{display:inline-block;font:700 11px/1 'Space Mono',monospace;letter-spacing:.12em;color:#9A8C76;}
   .orange-bar{background:var(--orange);height:3px;}
-  .masthead{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:18px 32px;background:var(--bg);}
-  .masthead img{height:38px;width:auto;display:block;}
-  .masthead nav{display:flex;align-items:center;gap:28px;}
-  .masthead nav a{font-size:13px;font-weight:600;color:#9A8C76;letter-spacing:.04em;text-decoration:none;cursor:pointer;}
+  .masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 24px;background:var(--bg);}
+  .masthead-logo{height:34px;width:auto;display:block;cursor:pointer;}
+  .masthead nav{display:flex;align-items:center;gap:24px;}
+  .masthead nav a{font-size:13px;font-weight:600;color:#9A8C76;letter-spacing:.04em;text-decoration:none;cursor:pointer;white-space:nowrap;}
   .masthead nav a.active{font-weight:700;color:var(--ink);border-bottom:2.5px solid var(--orange);padding-bottom:3px;}
   .masthead nav a:hover{color:var(--ink);}
-  .masthead .cta-site{background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;padding:8px 16px;border-radius:999px;letter-spacing:.06em;text-decoration:none;}
+  .masthead .cta-site{background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;padding:8px 16px;border-radius:999px;letter-spacing:.06em;text-decoration:none;white-space:nowrap;}
   .masthead .cta-site:hover{background:#333;}
+
+  /* BURGER */
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+  .burger span{display:block;width:22px;height:2.5px;background:var(--ink);border-radius:2px;transition:all .2s ease;}
+  .burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
+  .burger.open span:nth-child(2){opacity:0;}
+  .burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
+
+  /* MENU MOBILE */
+  .mobile-menu{
+    display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+    background:var(--ink);z-index:100;
+    flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  }
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{
+    font-family:'Bagel Fat One',cursive;font-size:32px;color:var(--bg);
+    text-decoration:none;padding:12px 24px;border-radius:12px;
+    transition:background .15s;
+  }
+  .mobile-menu a:hover{background:rgba(255,255,255,.08);}
+  .mobile-menu a.active{color:var(--orange);}
+  .mobile-menu-close{
+    position:absolute;top:20px;right:24px;
+    background:none;border:none;cursor:pointer;
+    font-size:28px;color:var(--bg);line-height:1;
+  }
+  .mobile-menu-logo{height:28px;margin-bottom:32px;opacity:.4;}
 
   /* ÉTAPES */
   .step-head{text-align:center;margin-bottom:36px;}
@@ -147,12 +175,29 @@
   .footer .version{font:400 10px/1.5 'Space Mono',monospace;letter-spacing:.08em;color:#C4B89A;margin-top:4px;}
 
   @media(max-width:640px){
+    .masthead{padding:14px 20px;}
+    .masthead nav, .masthead .cta-site{display:none;}
+    .burger{display:flex;}
+    .wrap{padding:32px 16px 32px;}
     .grid.cols-5{grid-template-columns:repeat(2,1fr);}
     .grid.cols-3{grid-template-columns:repeat(2,1fr);}
-    .grid.cols-2{grid-template-columns:1fr;}
-    .title{font-size:30px;}
+    .grid.cols-2{grid-template-columns:1fr;max-width:100%;}
+    .title{font-size:28px;}
+    .subtitle{font-size:14px;}
+    .result-hero{padding:32px 20px;border-radius:16px;}
     .result-hero-name{font-size:52px;}
-    .strength-label{width:90px;font-size:10px;}
+    .result-hero-tagline{font-size:18px;}
+    .result-hero-desc{font-size:14px;}
+    .strength-label{width:80px;font-size:10px;}
+    .strength-box{padding:20px 16px;}
+    .alt-box{padding:20px 16px;}
+    .btn-back{padding:12px 20px;font-size:14px;}
+    .btn-next{padding:12px 24px;font-size:14px;}
+    .cta{padding:14px 24px;font-size:16px;}
+    .recap{gap:6px;}
+    .recap-tag{font-size:9px;padding:5px 10px;}
+    .result-hero-eyebrow{font-size:9px;}
+    .nav{margin-top:32px;}
   }
 </style>
 </head>
@@ -165,14 +210,30 @@
 </div>
 <div class="orange-bar"></div>
 <div class="masthead">
-  <img src="assets/logo-wordmark.png" alt="NervyFox">
+  <a href="https://nervyfox.fr" target="_blank"><img class="masthead-logo" src="assets/logo-wordmark.png" alt="NervyFox"></a>
   <nav>
+    <a href="https://nervyfox.fr" target="_blank">Accueil</a>
     <a href="#" class="active">Sélecteur filament</a>
     <a href="#">Couleurs</a>
     <a href="#">Guides</a>
     <a href="#">Ressources</a>
   </nav>
   <a href="https://nervyfox.fr" target="_blank" class="cta-site">nervyfox.fr →</a>
+  <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- MENU MOBILE -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
+  <img class="mobile-menu-logo" src="assets/logo-wordmark.png" alt="NervyFox">
+  <a href="https://nervyfox.fr" target="_blank" onclick="toggleMenu()">Accueil</a>
+  <a href="#" class="active" onclick="toggleMenu()">Sélecteur filament</a>
+  <a href="#" onclick="toggleMenu()">Couleurs</a>
+  <a href="#" onclick="toggleMenu()">Guides</a>
+  <a href="#" onclick="toggleMenu()">Ressources</a>
+  <a href="https://nervyfox.fr" target="_blank" onclick="toggleMenu()" style="font-size:18px;color:var(--orange);margin-top:16px;">nervyfox.fr →</a>
 </div>
 
 <div class="wrap">
@@ -184,7 +245,7 @@
    DONNÉES
 ====================================================== */
 
-const VERSION = 'V0.2.1';
+const VERSION = 'V0.3.0';
 
 const stepMeta = {
   1: { eyebrow:"Étape 1/5", color:'#F89B6C', title:"C'est quoi comme objet ?",          subtitle:"Choisis ce qui décrit le mieux ce que tu veux imprimer." },
@@ -512,6 +573,17 @@ function render() {
 }
 
 render();
+
+/* ======================================================
+   MENU BURGER
+====================================================== */
+function toggleMenu() {
+  const menu   = document.getElementById('mobile-menu');
+  const burger = document.getElementById('burger');
+  const isOpen = menu.classList.toggle('open');
+  burger.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
 
 /* ======================================================
    TICKER
