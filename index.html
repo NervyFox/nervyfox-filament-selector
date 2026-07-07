@@ -134,37 +134,7 @@
 </head>
 <body>
 
-<div class="ticker-wrap">
-  <span class="ticker" id="ticker">
-    &nbsp;&nbsp;&nbsp;✦ OUTILS GRATUITS POUR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; IMPRESSION 3D ACCESSIBLE À TOUS &nbsp;&nbsp;&nbsp;✦ OUTILS GRATUITS POUR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; IMPRESSION 3D ACCESSIBLE À TOUS &nbsp;&nbsp;&nbsp;
-  </span>
-</div>
-<div class="orange-bar"></div>
-<div class="masthead">
-  <a href="/"><img class="masthead-logo" src="assets/logo-wordmark.png" alt="NervyFox"></a>
-  <nav>
-    <a href="/" class="active">Accueil</a>
-    <a href="/selecteur/">Sélecteur filament</a>
-    <a href="#">Couleurs</a>
-    <a href="#">Guides</a>
-    <a href="#">Ressources</a>
-  </nav>
-  <a href="https://nervyfox.fr" target="_blank" class="cta-site">nervyfox.fr →</a>
-  <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</div>
-
-<div class="mobile-menu" id="mobile-menu">
-  <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
-  <img class="mobile-menu-logo" src="assets/logo-wordmark.png" alt="NervyFox">
-  <a href="/" class="active" onclick="toggleMenu()">Accueil</a>
-  <a href="/selecteur/" onclick="toggleMenu()">Sélecteur filament</a>
-  <a href="#" onclick="toggleMenu()">Couleurs</a>
-  <a href="#" onclick="toggleMenu()">Guides</a>
-  <a href="#" onclick="toggleMenu()">Ressources</a>
-  <a href="https://nervyfox.fr" target="_blank" onclick="toggleMenu()" style="font-size:18px;color:var(--orange);margin-top:16px;">nervyfox.fr →</a>
-</div>
+<div id="hub-header"></div>
 
 <div class="wrap">
 
@@ -227,35 +197,14 @@
     </div>
   </section>
 
-  <div class="footer">
-    <img src="assets/logo-pill.png" alt="">
-    <div class="tag">NervyFox · Hub Maker · Designed with a 70s brain</div>
-    <div class="version">V1.0.0</div>
-  </div>
+  <div id="hub-footer"></div>
 
 </div>
 
+<script src="/assets/components.js"></script>
 <script>
-function toggleMenu() {
-  const menu   = document.getElementById('mobile-menu');
-  const burger = document.getElementById('burger');
-  const isOpen = menu.classList.toggle('open');
-  burger.classList.toggle('open', isOpen);
-  document.body.style.overflow = isOpen ? 'hidden' : '';
-}
-
-(function(){
-  const t = document.getElementById('ticker');
-  const original = t.innerHTML;
-  t.innerHTML = original + original;
-  let pos = 0;
-  const half = t.scrollWidth / 2;
-  setInterval(function(){
-    pos -= 0.5;
-    if(Math.abs(pos) >= half) pos = 0;
-    t.style.transform = 'translateX(' + pos + 'px)';
-  }, 16);
-})();
+  renderHeader('accueil');
+  renderFooter();
 </script>
 </body>
 </html>
