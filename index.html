@@ -134,6 +134,7 @@
   .footer{text-align:center;margin-top:64px;padding-top:24px;border-top:2px solid rgba(26,21,16,.12);}
   .footer img{height:22px;width:auto;margin-bottom:10px;display:inline-block;}
   .footer .tag{font:700 10px/1.5 'Space Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#9A8C76;}
+  .footer .version{font:400 10px/1.5 'Space Mono',monospace;letter-spacing:.08em;color:#C4B89A;margin-top:4px;}
 
   @media(max-width:640px){
     .grid.cols-5{grid-template-columns:repeat(2,1fr);}
@@ -359,10 +360,13 @@ function largeCardHtml(o, selected, onclick) {
   </div>`;
 }
 
+const VERSION = 'V0.1.0';
+
 function footerHtml() {
   return `<div class="footer">
     <img src="assets/logo-pill.png" alt="">
     <div class="tag">NervyFox · Hub Maker · Designed with a 70s brain</div>
+    <div class="version">${VERSION}</div>
   </div>`;
 }
 
