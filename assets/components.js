@@ -4,12 +4,12 @@
    VERSION unique ici — ne pas dupliquer ailleurs
 ====================================================== */
 
-const HUB_VERSION = 'V1.2.1';
+const HUB_VERSION = 'V2.0.0';
 
 const NAV_PAGES = [
   { id: 'accueil',    label: 'Accueil',            href: '/' },
   { id: 'selecteur',  label: 'Sélecteur filament', href: '/selecteur/' },
-  { id: 'couleurs',   label: 'Couleurs',           href: '#' },
+  { id: 'couleurs',   label: 'Couleurs',           href: '/couleurs/' },
   { id: 'guides',     label: 'Guides',             href: '#' },
   { id: 'ressources', label: 'Ressources',         href: '#' },
 ];

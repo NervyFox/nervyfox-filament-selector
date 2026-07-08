@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NervyFox — Combinaisons de couleurs</title>
+  <meta name="description" content="Trouve les meilleures combinaisons de couleurs pour ton AMS. Complémentaire, analogue, triadique, tétradique. Gratuit par NervyFox.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    /* === COULEURS UNIQUEMENT === */
+
+    /* En-tête de page */
+    .page-head { text-align: center; margin-bottom: 48px; }
+    .page-eyebrow { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--violet); margin-bottom: 14px; }
+    .page-title { font-family: 'Bagel Fat One', cursive; font-size: 48px; line-height: 1.05; margin-bottom: 14px; }
+    .page-title span { color: var(--violet); }
+    .page-subtitle { font-size: 16px; line-height: 1.6; color: var(--text-muted); max-width: 480px; margin: 0 auto; }
+
+    /* Boîte picker */
+    .picker-box {
+      border: var(--border); border-radius: var(--radius-lg); background: #fff;
+      padding: 36px 40px; max-width: 460px; margin: 0 auto 48px;
+      box-shadow: var(--shadow-md);
+    }
+    .picker-label {
+      font: 700 11px/1 'Space Mono', monospace; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--text-light);
+      margin-bottom: 24px; text-align: center;
+    }
+
+    /* Roue */
+    .wheel-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+    #wheel { cursor: crosshair; display: block; touch-action: none; }
+
+    /* Sliders */
+    .slider-block { margin-bottom: 14px; }
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+    .slider-name {
+      font: 700 10px/1 'Space Mono', monospace; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-muted);
+      width: 82px; flex-shrink: 0;
+    }
+    .slider-track {
+      flex: 1; position: relative; height: 14px;
+      border-radius: var(--radius-pill); border: var(--border); overflow: visible;
+      cursor: pointer;
+    }
+    .slider-track input[type=range] {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: pointer; margin: 0; padding: 0; z-index: 2;
+    }
+    .slider-fill {
+      position: absolute; top: 0; left: 0; bottom: 0;
+      border-radius: var(--radius-pill); pointer-events: none;
+    }
+    .slider-thumb {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #fff; border: var(--border);
+      box-shadow: 2px 2px 0 var(--ink);
+      pointer-events: none; z-index: 1;
+      transition: left .04s;
+    }
+    .slider-val {
+      font: 700 11px/1 'Space Mono', monospace;
+      width: 36px; text-align: right; color: var(--text-muted); flex-shrink: 0;
+    }
+
+    /* Aperçu couleur */
+    .color-preview-row {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 24px; padding-top: 24px; border-top: var(--border-light);
+    }
+    .color-preview-swatch {
+      width: 60px; height: 60px; border-radius: var(--radius-md);
+      border: var(--border); flex-shrink: 0; transition: background .1s;
+    }
+    .color-preview-info { flex: 1; min-width: 0; }
+    .color-preview-name {
+      font-family: 'Bagel Fat One', cursive; font-size: 18px;
+      margin-bottom: 8px; line-height: 1.1;
+    }
+    .color-hex-row { display: flex; align-items: center; gap: 8px; }
+    .color-hex-input {
+      font: 700 13px/1 'Space Mono', monospace; letter-spacing: .06em;
+      color: var(--ink); background: var(--bg);
+      border: var(--border-light); border-radius: var(--radius-sm);
+      padding: 7px 10px; width: 104px; text-transform: uppercase;
+    }
+    .color-hex-input:focus { outline: 2.5px solid var(--violet); border-color: transparent; }
+    .btn-copy {
+      font: 700 10px/1 'Space Mono', monospace; letter-spacing: .08em;
+      text-transform: uppercase; border: var(--border); border-radius: var(--radius-pill);
+      padding: 8px 14px; background: #fff; cursor: pointer; font-family: inherit;
+      color: var(--text-muted); transition: background .12s, color .12s, border-color .12s;
+      white-space: nowrap;
+    }
+    .btn-copy:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-copy.copied { background: var(--violet); color: #fff; border-color: var(--violet); }
+
+    /* Section combos */
+    .section-label {
+      font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--text-light); margin-bottom: 24px;
+    }
+    .combos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Carte combo */
+    .combo-card {
+      border: var(--border); border-radius: var(--radius-lg); background: #fff;
+      padding: 24px; box-shadow: var(--shadow-lg);
+    }
+    .combo-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 8px; margin-bottom: 10px;
+    }
+    .combo-title { font-family: 'Bagel Fat One', cursive; font-size: 20px; line-height: 1.1; }
+    .combo-badge {
+      font: 700 10px/1 'Space Mono', monospace; letter-spacing: .1em;
+      text-transform: uppercase; border: var(--border); border-radius: var(--radius-pill);
+      padding: 5px 10px; white-space: nowrap; flex-shrink: 0;
+      background: var(--bg); color: var(--text-muted);
+    }
+    .combo-desc { font-size: 13px; line-height: 1.55; color: var(--text-muted); margin-bottom: 20px; }
+
+    /* Swatches */
+    .swatches { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .swatch-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .swatch-color {
+      width: 52px; height: 52px; border-radius: var(--radius-md);
+      border: var(--border); transition: background .15s;
+    }
+    .swatch-hex {
+      font: 700 9px/1 'Space Mono', monospace; letter-spacing: .04em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+
+    /* Slots AMS */
+    .ams-label {
+      font: 700 9px/1 'Space Mono', monospace; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;
+    }
+    .ams-slots { display: flex; gap: 5px; }
+    .ams-slot {
+      flex: 1; height: 10px; border-radius: var(--radius-pill);
+      border: 1.5px solid rgba(26,21,16,.18); transition: background .15s;
+    }
+    .ams-slot.empty { border-style: dashed; background: transparent !important; }
+
+    /* Note AMS */
+    .combo-ams-note {
+      margin-top: 12px; padding-top: 12px; border-top: var(--border-light);
+      font-size: 12px; line-height: 1.5; color: var(--text-subtle);
+    }
+    .combo-ams-note strong { color: var(--text-muted); }
+
+    @media (max-width: 640px) {
+      .page-title { font-size: 32px; }
+      .picker-box { padding: 24px 20px; }
+      .combos-grid { grid-template-columns: 1fr; }
+      .combo-card { padding: 20px 16px; }
+      .swatch-color { width: 44px; height: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="hub-header"></div>
+<div class="wrap">
+
+  <div class="page-head">
+    <div class="page-eyebrow">Outil #2 · AMS & Multicolore</div>
+    <h1 class="page-title">Combinaisons<br>de <span>couleurs</span></h1>
+    <p class="page-subtitle">Choisis ta couleur de base sur la roue, l'outil calcule les meilleures harmonies pour remplir tes slots AMS.</p>
+  </div>
+
+  <!-- Picker -->
+  <div class="picker-box">
+    <div class="picker-label">Ta couleur de base</div>
+
+    <div class="wheel-wrap">
+      <canvas id="wheel" width="220" height="220"></canvas>
+    </div>
+
+    <div class="slider-block">
+      <div class="slider-row">
+        <div class="slider-name">Saturation</div>
+        <div class="slider-track" id="sat-track">
+          <div class="slider-fill" id="sat-fill"></div>
+          <div class="slider-thumb" id="sat-thumb"></div>
+          <input type="range" id="sat-slider" min="10" max="100" value="75">
+        </div>
+        <div class="slider-val" id="sat-val">75%</div>
+      </div>
+    </div>
+
+    <div class="slider-block">
+      <div class="slider-row">
+        <div class="slider-name">Luminosité</div>
+        <div class="slider-track" id="lit-track">
+          <div class="slider-fill" id="lit-fill"></div>
+          <div class="slider-thumb" id="lit-thumb"></div>
+          <input type="range" id="lit-slider" min="15" max="85" value="55">
+        </div>
+        <div class="slider-val" id="lit-val">55%</div>
+      </div>
+    </div>
+
+    <div class="color-preview-row">
+      <div class="color-preview-swatch" id="preview-swatch"></div>
+      <div class="color-preview-info">
+        <div class="color-preview-name" id="preview-name">Orange</div>
+        <div class="color-hex-row">
+          <input class="color-hex-input" id="hex-input" type="text" maxlength="7" spellcheck="false">
+          <button class="btn-copy" id="btn-copy" onclick="copyHex()">Copier</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Combos -->
+  <div class="section-label">Tes combinaisons</div>
+  <div class="combos-grid" id="combos-grid"></div>
+
+  <div id="hub-footer"></div>
+</div>
+
+<script src="/assets/components.js"></script>
+<script src="/assets/data.js"></script>
+<script>
+renderHeader('couleurs');
+renderFooter();
+
+/* ======================================================
+   ÉTAT
+====================================================== */
+let hue = 22;
+let sat = 88;
+let lit = 53;
+
+/* ======================================================
+   UTILITAIRES COULEUR
+====================================================== */
+function hslToHex(h, s, l) {
+  s /= 100; l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const c = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * c).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function hexToHsl(hex) {
+  hex = hex.replace('#', '');
+  if (!/^[0-9A-Fa-f]{6}$/.test(hex)) return null;
+  const r = parseInt(hex.slice(0,2),16)/255;
+  const g = parseInt(hex.slice(2,4),16)/255;
+  const b = parseInt(hex.slice(4,6),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h, s, l = (max+min)/2;
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r: h = ((g-b)/d + (g<b?6:0))/6; break;
+      case g: h = ((b-r)/d+2)/6; break;
+      case b: h = ((r-g)/d+4)/6; break;
+    }
+  }
+  return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
+}
+
+function colorName(h) {
+  if (h >= 345 || h < 12)  return 'Rouge';
+  if (h < 28)               return 'Rouge-orangé';
+  if (h < 50)               return 'Orange';
+  if (h < 65)               return 'Jaune-orangé';
+  if (h < 82)               return 'Jaune';
+  if (h < 110)              return 'Jaune-vert';
+  if (h < 160)              return 'Vert';
+  if (h < 200)              return 'Vert-cyan';
+  if (h < 215)              return 'Cyan';
+  if (h < 252)              return 'Bleu-cyan';
+  if (h < 270)              return 'Bleu';
+  if (h < 292)              return 'Indigo';
+  if (h < 330)              return 'Violet';
+  return 'Rose';
+}
+
+/* ======================================================
+   DÉFINITION DES COMBINAISONS
+====================================================== */
+const COMBINATIONS = [
+  {
+    id: 'complementaire',
+    title: 'Complémentaire',
+    slots: 2,
+    desc: 'Deux couleurs à l\'opposé sur la roue. Contraste maximum — idéal pour les pièces qui veulent s\'imposer.',
+    amsNote: 'Il reste 2 slots libres dans l\'AMS — complète avec du blanc et du noir pour plus de polyvalence.',
+    getColors: (h, s, l) => [
+      { h, s, l },
+      { h: (h + 180) % 360, s, l }
+    ]
+  },
+  {
+    id: 'analogue',
+    title: 'Analogue',
+    slots: 3,
+    desc: 'Trois voisines sur la roue. Une harmonie naturelle et douce, parfaite pour les objets décoratifs.',
+    amsNote: 'Un slot reste libre — un neutre (blanc, gris ou noir) équilibre bien la palette.',
+    getColors: (h, s, l) => [
+      { h: (h - 30 + 360) % 360, s, l },
+      { h, s, l },
+      { h: (h + 30) % 360, s, l }
+    ]
+  },
+  {
+    id: 'triadique',
+    title: 'Triadique',
+    slots: 3,
+    desc: 'Trois couleurs à égale distance. Vibrant et équilibré — idéal pour les pièces techniques ou ludiques.',
+    amsNote: 'Un slot reste libre — un neutre (blanc, gris ou noir) équilibre bien la palette.',
+    getColors: (h, s, l) => [
+      { h, s, l },
+      { h: (h + 120) % 360, s, l },
+      { h: (h + 240) % 360, s, l }
+    ]
+  },
+  {
+    id: 'tetradique',
+    title: 'Tétradique',
+    slots: 4,
+    desc: 'Quatre couleurs à 90° d\'intervalle. Remplit exactement les 4 slots AMS — rendu maximal, zéro gaspillage.',
+    amsNote: null,
+    getColors: (h, s, l) => [
+      { h, s, l },
+      { h: (h + 90) % 360, s, l },
+      { h: (h + 180) % 360, s, l },
+      { h: (h + 270) % 360, s, l }
+    ]
+  }
+];
+
+/* ======================================================
+   ROUE CHROMATIQUE (CANVAS)
+====================================================== */
+const canvas = document.getElementById('wheel');
+const ctx    = canvas.getContext('2d');
+const CX = canvas.width / 2, CY = canvas.height / 2;
+const R_OUT = 102, R_IN = 70;
+
+function drawWheel() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Anneau de teintes
+  for (let a = 0; a < 360; a++) {
+    const s1 = (a - 0.8) * Math.PI / 180;
+    const e1 = (a + 1.2) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R_OUT, s1, e1);
+    ctx.closePath();
+    ctx.fillStyle = `hsl(${a}, ${sat}%, ${lit}%)`;
+    ctx.fill();
+  }
+
+  // Cercle intérieur vide (fond crème)
+  ctx.beginPath();
+  ctx.arc(CX, CY, R_IN, 0, Math.PI * 2);
+  ctx.fillStyle = '#F8F0E3';
+  ctx.fill();
+  ctx.strokeStyle = '#1A1510';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Aperçu de la couleur sélectionnée au centre
+  ctx.beginPath();
+  ctx.arc(CX, CY, R_IN - 8, 0, Math.PI * 2);
+  ctx.fillStyle = hslToHex(hue, sat, lit);
+  ctx.fill();
+
+  // Marqueur de sélection sur l'anneau
+  const rad  = hue * Math.PI / 180;
+  const midR = (R_OUT + R_IN) / 2;
+  const dotX = CX + midR * Math.cos(rad);
+  const dotY = CY + midR * Math.sin(rad);
+
+  ctx.beginPath();
+  ctx.arc(dotX, dotY, 10, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#1A1510';
+  ctx.lineWidth = 2.5;
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(dotX, dotY, 5.5, 0, Math.PI * 2);
+  ctx.fillStyle = `hsl(${hue}, ${sat}%, ${lit}%)`;
+  ctx.fill();
+}
+
+function angleFromEvent(e) {
+  const rect   = canvas.getBoundingClientRect();
+  const scaleX = canvas.width  / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const src    = e.touches ? e.touches[0] : e;
+  const cx     = (src.clientX - rect.left) * scaleX;
+  const cy     = (src.clientY - rect.top)  * scaleY;
+  const dx     = cx - CX, dy = cy - CY;
+  return {
+    angle: (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360,
+    dist:  Math.sqrt(dx*dx + dy*dy)
+  };
+}
+
+let dragging = false;
+
+canvas.addEventListener('mousedown', e => {
+  const { angle, dist } = angleFromEvent(e);
+  if (dist >= R_IN - 4 && dist <= R_OUT + 8) {
+    dragging = true; hue = Math.round(angle); update();
+  }
+});
+canvas.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  hue = Math.round(angleFromEvent(e).angle); update();
+});
+document.addEventListener('mouseup', () => { dragging = false; });
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const { angle, dist } = angleFromEvent(e);
+  if (dist >= R_IN - 10 && dist <= R_OUT + 10) {
+    dragging = true; hue = Math.round(angle); update();
+  }
+}, { passive: false });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!dragging) return;
+  hue = Math.round(angleFromEvent(e).angle); update();
+}, { passive: false });
+canvas.addEventListener('touchend', () => { dragging = false; });
+
+/* ======================================================
+   SLIDERS
+====================================================== */
+const satSlider = document.getElementById('sat-slider');
+const litSlider = document.getElementById('lit-slider');
+
+function updateSliders() {
+  const satPct = (sat - 10) / 90;
+  const litPct = (lit - 15) / 70;
+
+  // Backgrounds dégradés
+  document.getElementById('sat-fill').style.cssText =
+    `background: linear-gradient(to right, hsl(${hue},10%,${lit}%), hsl(${hue},100%,${lit}%)); width:100%; height:100%; border-radius: inherit;`;
+  document.getElementById('lit-fill').style.cssText =
+    `background: linear-gradient(to right, hsl(${hue},${sat}%,12%), hsl(${hue},${sat}%,50%), hsl(${hue},${sat}%,88%)); width:100%; height:100%; border-radius: inherit;`;
+
+  // Position des thumbs
+  document.getElementById('sat-thumb').style.left = `calc(${satPct * 100}% )`;
+  document.getElementById('lit-thumb').style.left = `calc(${litPct * 100}% )`;
+
+  // Valeurs texte
+  document.getElementById('sat-val').textContent = sat + '%';
+  document.getElementById('lit-val').textContent = lit + '%';
+}
+
+satSlider.addEventListener('input', () => { sat = +satSlider.value; update(); });
+litSlider.addEventListener('input', () => { lit = +litSlider.value; update(); });
+
+/* ======================================================
+   HEX INPUT
+====================================================== */
+const hexInput = document.getElementById('hex-input');
+hexInput.addEventListener('input', () => {
+  let v = hexInput.value.trim();
+  if (!v.startsWith('#')) v = '#' + v;
+  const hsl = hexToHsl(v);
+  if (hsl) {
+    [hue, sat, lit] = hsl;
+    satSlider.value = sat;
+    litSlider.value = lit;
+    update(true);
+  }
+});
+
+/* ======================================================
+   COPIE HEX
+====================================================== */
+function copyHex() {
+  const hex = hslToHex(hue, sat, lit).toUpperCase();
+  navigator.clipboard.writeText(hex).catch(() => {});
+  const btn = document.getElementById('btn-copy');
+  btn.textContent = 'Copié !';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 1600);
+}
+
+/* ======================================================
+   APERÇU COULEUR
+====================================================== */
+function updatePreview(skipInput) {
+  const hex = hslToHex(hue, sat, lit).toUpperCase();
+  document.getElementById('preview-swatch').style.background = hex;
+  document.getElementById('preview-name').textContent = colorName(hue);
+  if (!skipInput && document.activeElement !== hexInput) {
+    hexInput.value = hex;
+  }
+}
+
+/* ======================================================
+   RENDU DES CARTES COMBO
+====================================================== */
+function renderCombos() {
+  document.getElementById('combos-grid').innerHTML = COMBINATIONS.map(combo => {
+    const colors = combo.getColors(hue, sat, lit);
+    const hexes  = colors.map(c => hslToHex(c.h, c.s, c.l).toUpperCase());
+
+    // Swatches
+    const swatchesHtml = hexes.map(h => `
+      <div class="swatch-item">
+        <div class="swatch-color" style="background:${h};"></div>
+        <div class="swatch-hex">${h}</div>
+      </div>`).join('');
+
+    // Slots AMS (4 au total)
+    const slots = [...hexes];
+    while (slots.length < 4) slots.push(null);
+    const amsHtml = slots.map(h =>
+      `<div class="ams-slot${h ? '' : ' empty'}" style="${h ? `background:${h};` : ''}"></div>`
+    ).join('');
+
+    return `
+      <div class="combo-card">
+        <div class="combo-header">
+          <div class="combo-title">${combo.title}</div>
+          <div class="combo-badge">${combo.slots} couleur${combo.slots > 1 ? 's' : ''}</div>
+        </div>
+        <div class="combo-desc">${combo.desc}</div>
+        <div class="swatches">${swatchesHtml}</div>
+        <div class="ams-label">Slots AMS</div>
+        <div class="ams-slots">${amsHtml}</div>
+        ${combo.amsNote
+          ? `<div class="combo-ams-note"><strong>→</strong> ${combo.amsNote}</div>`
+          : ''}
+      </div>`;
+  }).join('');
+}
+
+/* ======================================================
+   UPDATE GLOBAL
+====================================================== */
+function update(skipInput = false) {
+  drawWheel();
+  updateSliders();
+  updatePreview(skipInput);
+  renderCombos();
+}
+
+// Init
+update();
+</script>
+</body>
+</html>
