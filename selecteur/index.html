@@ -51,6 +51,20 @@
 
     .constraint-helper { text-align: center; margin-bottom: 18px; font: 700 12px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
 
+    /* Bouton "aucune contrainte" — step 3 */
+    .btn-none-wrap { max-width: 600px; margin: 20px auto 0; }
+    .btn-none {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 16px 24px;
+      border: var(--border); border-radius: var(--radius-pill);
+      background: #fff; cursor: pointer; font-family: inherit;
+      font-weight: 700; font-size: 15px; color: var(--text-muted);
+      transition: background .12s, color .12s, box-shadow .12s, transform .12s;
+    }
+    .btn-none:hover { background: var(--bg); color: var(--ink); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    .btn-none.active { background: var(--ink); color: var(--bg); box-shadow: var(--shadow-sm); }
+    .btn-none .btn-none-icon { font-size: 18px; }
+
     /* Navigation */
     .step-nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 48px; }
     .btn-back { display: inline-flex; align-items: center; gap: 8px; border: var(--border); border-radius: var(--radius-pill); padding: 14px 26px; font-weight: 700; font-size: 15px; cursor: pointer; background: #fff; font-family: inherit; }
@@ -160,6 +174,10 @@ function toggleConstraint(id) {
   if (i > -1) state.constraints.splice(i, 1);
   else if (state.constraints.length < 3) state.constraints.push(id);
   render();
+}
+function skipConstraints() {
+  state.constraints = [];
+  navigate(4);
 }
 
 function navigate(newStep) {
@@ -279,15 +297,22 @@ function render() {
     content = `<div class="grid cols-3">${Q_ENV.map(o => cardHtml(o, env === o.id, `sel('env','${o.id}')`)).join('')}</div>`;
   } else if (step === 3) {
     const atMax = constraints.length >= 3;
+    const hasConstraints = constraints.length > 0;
     content = `
-      <div class="constraint-helper">${constraints.length > 0
-        ? `${constraints.length}/3 sélectionnées`
-        : "Aucune contrainte ? Passe directement à l'étape suivante."
+      <div class="constraint-helper">${hasConstraints
+        ? `${constraints.length}/3 sélectionnée${constraints.length > 1 ? 's' : ''}`
+        : 'Sélectionne jusqu\'à 3 contraintes, ou passe directement.'
       }</div>
       <div class="grid cols-2">${Q_CONSTRAINTS.map(o => {
         const sel = constraints.includes(o.id);
         return cardHtml(o, sel, `toggleConstraint('${o.id}')`, !sel && atMax);
-      }).join('')}</div>`;
+      }).join('')}</div>
+      <div class="btn-none-wrap">
+        <button class="btn-none ${!hasConstraints ? 'active' : ''}" onclick="skipConstraints()">
+          <span class="btn-none-icon">○</span>
+          Aucune contrainte physique — passer à l'étape suivante
+        </button>
+      </div>`;
   } else if (step === 4) {
     content = `<div class="grid cols-2">${Q_FINISH.map(o => cardHtml(o, finition === o.id, `sel('finition','${o.id}')`)).join('')}</div>`;
   } else if (step === 5) {

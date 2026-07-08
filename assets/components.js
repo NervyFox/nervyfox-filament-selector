@@ -4,7 +4,7 @@
    VERSION unique ici — ne pas dupliquer ailleurs
 ====================================================== */
 
-const HUB_VERSION = 'V1.2.0';
+const HUB_VERSION = 'V1.2.1';
 
 const NAV_PAGES = [
   { id: 'accueil',    label: 'Accueil',            href: '/' },
