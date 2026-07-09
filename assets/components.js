@@ -54,6 +54,7 @@ function collectTextNodes(root) {
         if (!parent) return NodeFilter.FILTER_REJECT;
         const tag = parent.tagName;
         if (['SCRIPT','STYLE','NOSCRIPT'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('.lang-switcher')) return NodeFilter.FILTER_REJECT;
         if (!node.textContent.trim()) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
