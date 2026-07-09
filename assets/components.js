@@ -30,6 +30,7 @@ function renderHeader(activePage) {
     <div class="masthead">
       <a href="/"><img class="masthead-logo" src="/assets/logo-wordmark.png" alt="NervyFox"></a>
       <nav>${navLinks}</nav>
+      <div id="google_translate_element"></div>
       <a href="https://nervyfox.fr" target="_blank" class="cta-site">nervyfox.fr →</a>
       <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -71,3 +72,21 @@ function toggleMenu() {
   burger.classList.toggle('open', isOpen);
   document.body.style.overflow = isOpen ? 'hidden' : '';
 }
+
+/* === GOOGLE TRANSLATE === */
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'fr',
+    includedLanguages: 'en,fr',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+
+// Inject Google Translate script once
+(function() {
+  const s = document.createElement('script');
+  s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+  s.async = true;
+  document.head.appendChild(s);
+})();

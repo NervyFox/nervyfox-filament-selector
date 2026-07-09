@@ -97,3 +97,23 @@ p { margin: 0; }
   .masthead nav, .masthead .cta-site { display: none; }
   .burger { display: flex; }
 }
+
+/* === GOOGLE TRANSLATE === */
+#google_translate_element { display: flex; align-items: center; }
+.goog-te-gadget { font-family: 'Space Mono', monospace !important; font-size: 0 !important; }
+.goog-te-gadget .goog-te-combo {
+  font: 700 11px/1 'Space Mono', monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  padding: 7px 12px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.goog-te-gadget .goog-te-combo:hover { background: var(--bg); }
+.goog-logo-link, .goog-te-gadget span { display: none !important; }
