@@ -94,7 +94,7 @@ p { margin: 0; }
 @media (max-width: 640px) {
   .wrap { padding: 40px 16px 60px; }
   .masthead { padding: 14px 20px; }
-  .masthead nav, .masthead .cta-site { display: none; }
+  .masthead nav, .masthead .cta-site, .masthead .lang-switcher { display: none; }
   .burger { display: flex; }
 }
 

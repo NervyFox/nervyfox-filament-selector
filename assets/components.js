@@ -93,7 +93,8 @@ function setLang(lang) {
 
   // Mettre à jour le switcher
   document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
+    btn.classList.remove('active');
+    if (btn.dataset.lang === lang) btn.classList.add('active');
   });
 
   // Mettre à jour les labels de nav
