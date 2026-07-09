@@ -205,8 +205,6 @@
   <div id="hub-footer"></div>
 </div>
 
-<script src="/assets/data.fr.js"></script>
-<script src="/assets/data.en.js"></script>
 <script src="/assets/components.js"></script>
 <script src="/assets/data.js"></script>
 <script>
@@ -216,8 +214,7 @@ renderFooter();
 /* ======================================================
    DONNÉES FILAMENTS SÉCHAGE
 ====================================================== */
-/* FILAMENTS_SECHAGE chargé depuis data.js (FILAMENTS_SECHAGE_LANG) */
-var _FSDUMMY = {
+const FILAMENTS_SECHAGE = {
   PLA: {
     label: 'PLA', color: '#F2641E', textColor: '#1A1510',
     sensitivityHumidity: 'low', hygroscopic: false,
@@ -303,7 +300,7 @@ let state = { filament: null, humidity: 45, signs: [] };
    CALCULS
 ====================================================== */
 function getUrgency(filamentKey, humidity, signs) {
-  const f = FILAMENTS_SECHAGE_LANG[filamentKey];
+  const f = FILAMENTS_SECHAGE[filamentKey];
   const s = signs.length;
   const sens = f.sensitivityHumidity;
 
@@ -335,7 +332,7 @@ function getUrgency(filamentKey, humidity, signs) {
 }
 
 function getDuration(filamentKey, humidity, signs) {
-  const f = FILAMENTS_SECHAGE_LANG[filamentKey];
+  const f = FILAMENTS_SECHAGE[filamentKey];
   const humFactor = Math.max(0, Math.min(1, (humidity - 20) / 80));
   const signBonus = signs.length * 1.5;
   let d = f.durationBase + humFactor * (f.durationMax - f.durationBase) + signBonus;
@@ -343,7 +340,7 @@ function getDuration(filamentKey, humidity, signs) {
   return Math.round(d * 2) / 2; // arrondi à 0.5h
 }
 
-var _UMDUMMY = {
+const URGENCY_META = {
   non_necessaire: {
     color: '#4CAF50', textColor: '#fff',
     icon: '✦', level: 'Séchage non nécessaire',
@@ -366,7 +363,7 @@ var _UMDUMMY = {
   }
 };
 
-var _HZDUMMY = [
+const HUMIDITY_ZONES = [
   { max: 35,  label: 'Sec',          cls: 'hz-dry'    },
   { max: 55,  label: 'Normal',       cls: 'hz-normal'  },
   { max: 70,  label: 'Humide',       cls: 'hz-humid'   },
@@ -374,7 +371,7 @@ var _HZDUMMY = [
 ];
 
 function getHumidityZone(h) {
-  return HUMIDITY_ZONES_LANG.find(z => h < z.max) || HUMIDITY_ZONES_LANG[HUMIDITY_ZONES_LANG.length - 1];
+  return HUMIDITY_ZONES.find(z => h < z.max) || HUMIDITY_ZONES[HUMIDITY_ZONES.length - 1];
 }
 
 /* ======================================================
@@ -382,14 +379,14 @@ function getHumidityZone(h) {
 ====================================================== */
 function renderFilamentGrid() {
   document.getElementById('filament-grid').innerHTML =
-    Object.entries(FILAMENTS_SECHAGE_LANG).map(([key, f]) => `
+    Object.entries(FILAMENTS_SECHAGE).map(([key, f]) => `
       <div class="fil-card ${state.filament === key ? 'selected' : ''}"
            onclick="selectFilament('${key}')"
            style="${state.filament === key ? `box-shadow:5px 5px 0 ${f.color};` : ''}">
         ${state.filament === key ? `<style>.fil-card[onclick="selectFilament('${key}')"]::before{background:${f.color};}</style>` : ''}
         <div class="fil-dot" style="background:${f.color};"></div>
         <div class="fil-name">${f.label}</div>
-        <div class="fil-hygro ${f.hygroscopic ? 'high' : ''}">${f.hygroscopic ? (IS_EN ? 'Hygro' : 'Hygro') : (IS_EN ? 'Stable' : 'Stable')}</div>
+        <div class="fil-hygro ${f.hygroscopic ? 'high' : ''}">${f.hygroscopic ? 'Hygro' : 'Stable'}</div>
       </div>`).join('');
 }
 
@@ -433,9 +430,9 @@ function renderResult() {
     return;
   }
 
-  const f        = FILAMENTS_SECHAGE_LANG[state.filament];
+  const f        = FILAMENTS_SECHAGE[state.filament];
   const urgency  = getUrgency(state.filament, state.humidity, state.signs);
-  const meta     = URGENCY_META_LANG[urgency];
+  const meta     = URGENCY_META[urgency];
   const duration = getDuration(state.filament, state.humidity, state.signs);
   const durationStr = duration % 1 === 0 ? `${duration}h` : `${duration}h`;
 
@@ -444,11 +441,11 @@ function renderResult() {
     : `${f.tempIdeal} °C`;
 
   const tempSub = urgency === 'non_necessaire'
-    ? LANG === 'en' ? 'No drying required' : 'Séchage non requis'
+    ? 'Séchage non requis'
     : `Plage : ${f.tempMin}–${f.tempMax} °C`;
 
   const durationSub = urgency === 'non_necessaire'
-    ? LANG === 'en' ? 'No drying required' : 'Séchage non requis'
+    ? 'Séchage non requis'
     : `En fonction de l'humidité et des signes`;
 
   const tipsHtml = f.tips.map(t =>

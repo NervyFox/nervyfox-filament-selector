@@ -1,51 +1,35 @@
 /* ======================================================
    NERVYFOX HUB — components.js
-   Header + Footer + Burger + Ticker + Switcher FR/EN
+   Header + Footer + Burger + Ticker
    VERSION unique ici — ne pas dupliquer ailleurs
 ====================================================== */
 
-const HUB_VERSION = 'V4.3.0';
+const HUB_VERSION = 'V4.1.0';
 
 const NAV_PAGES = [
-  { id: 'accueil',      fr: 'Accueil',            en: 'Home',              href: '/' },
-  { id: 'selecteur',   fr: 'Sélecteur filament', en: 'Filament selector', href: '/selecteur/' },
-  { id: 'couleurs',    fr: 'Couleurs',            en: 'Colors',            href: '/couleurs/' },
-  { id: 'sechage',     fr: 'Séchage',             en: 'Drying',            href: '/sechage/' },
-  { id: 'diagnostique',fr: 'Diagnostique',        en: 'Diagnostic',        href: '/diagnostique/' },
+  { id: 'accueil',      label: 'Accueil',            href: '/' },
+  { id: 'selecteur',   label: 'Sélecteur filament', href: '/selecteur/' },
+  { id: 'couleurs',    label: 'Couleurs',            href: '/couleurs/' },
+  { id: 'sechage',     label: 'Séchage',             href: '/sechage/' },
+  { id: 'diagnostique',label: 'Diagnostique',        href: '/diagnostique/' },
 ];
 
-var LANG = localStorage.getItem('nf-lang') || 'fr';
-
-function setLang(lang) {
-  localStorage.setItem('nf-lang', lang);
-  location.reload();
-}
+const TICKER_TEXT = '&nbsp;&nbsp;&nbsp;✦ OUTILS GRATUITS POUR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; IMPRESSION 3D ACCESSIBLE À TOUS &nbsp;&nbsp;&nbsp;';
 
 function renderHeader(activePage) {
   const navLinks = NAV_PAGES.map(p =>
-    `<a href="${p.href}" class="${activePage === p.id ? 'active' : ''}">${LANG === 'en' ? p.en : p.fr}</a>`
+    `<a href="${p.href}" class="${activePage === p.id ? 'active' : ''}">${p.label}</a>`
   ).join('');
   const mobileLinks = NAV_PAGES.map(p =>
-    `<a href="${p.href}" class="${activePage === p.id ? 'active' : ''}" onclick="toggleMenu()">${LANG === 'en' ? p.en : p.fr}</a>`
+    `<a href="${p.href}" class="${activePage === p.id ? 'active' : ''}" onclick="toggleMenu()">${p.label}</a>`
   ).join('');
 
   document.getElementById('hub-header').innerHTML = `
-    <div class="ticker-wrap"><span class="ticker" id="ticker">${LANG === 'en'
-      ? '&nbsp;&nbsp;&nbsp;✦ FREE TOOLS FOR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; 3D PRINTING FOR EVERYONE &nbsp;&nbsp;&nbsp;'
-      : '&nbsp;&nbsp;&nbsp;✦ OUTILS GRATUITS POUR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; IMPRESSION 3D ACCESSIBLE À TOUS &nbsp;&nbsp;&nbsp;'
-    }${LANG === 'en'
-      ? '&nbsp;&nbsp;&nbsp;✦ FREE TOOLS FOR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; 3D PRINTING FOR EVERYONE &nbsp;&nbsp;&nbsp;'
-      : '&nbsp;&nbsp;&nbsp;✦ OUTILS GRATUITS POUR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; IMPRESSION 3D ACCESSIBLE À TOUS &nbsp;&nbsp;&nbsp;'
-    }</span></div>
+    <div class="ticker-wrap"><span class="ticker" id="ticker">${TICKER_TEXT}${TICKER_TEXT}</span></div>
     <div class="orange-bar"></div>
     <div class="masthead">
       <a href="/"><img class="masthead-logo" src="/assets/logo-wordmark.png" alt="NervyFox"></a>
       <nav>${navLinks}</nav>
-      <div class="lang-switcher">
-        <button class="lang-btn ${LANG === 'fr' ? 'active' : ''}" onclick="setLang('fr')">FR</button>
-        <span class="lang-sep">·</span>
-        <button class="lang-btn ${LANG === 'en' ? 'active' : ''}" onclick="setLang('en')">EN</button>
-      </div>
       <a href="https://nervyfox.fr" target="_blank" class="cta-site">nervyfox.fr →</a>
       <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -55,11 +39,6 @@ function renderHeader(activePage) {
       <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
       <img class="mobile-menu-logo" src="/assets/logo-wordmark.png" alt="NervyFox">
       ${mobileLinks}
-      <div class="lang-switcher" style="margin-top:16px;">
-        <button class="lang-btn ${LANG === 'fr' ? 'active' : ''}" onclick="setLang('fr')">FR</button>
-        <span class="lang-sep">·</span>
-        <button class="lang-btn ${LANG === 'en' ? 'active' : ''}" onclick="setLang('en')">EN</button>
-      </div>
       <a href="https://nervyfox.fr" target="_blank" onclick="toggleMenu()"
         style="font-size:18px;color:var(--orange);margin-top:16px;">nervyfox.fr →</a>
     </div>

@@ -3,332 +3,515 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NervyFox — Sélecteur de filament</title>
-  <meta name="description" content="Trouve le bon filament 3D pour ton projet en 5 étapes. Guide gratuit par NervyFox.">
+  <title>NervyFox — Calculateur de séchage</title>
+  <meta name="description" content="Sèche ton filament au bon temps et à la bonne température. PLA, PETG, ABS, ASA, TPU, Nylon. Gratuit par NervyFox.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/styles.css">
   <style>
-    /* === SÉLECTEUR UNIQUEMENT === */
-    .wrap { padding: 56px 24px 40px; }
+    /* === SÉCHAGE UNIQUEMENT === */
 
-    /* Étapes */
-    .step-head { text-align: center; margin-bottom: 36px; }
-    .step-eyebrow { font: 700 12px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 14px; }
-    .step-title { font-family: 'Bagel Fat One', cursive; font-size: 40px; line-height: 1.08; margin-bottom: 14px; }
-    .step-subtitle { font-size: 16px; color: var(--text-muted); max-width: 520px; margin: 0 auto; }
+    /* En-tête */
+    .page-head { text-align: center; margin-bottom: 48px; }
+    .page-eyebrow { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--rose); margin-bottom: 14px; }
+    .page-title { font-family: 'Bagel Fat One', cursive; font-size: 48px; line-height: 1.05; margin-bottom: 14px; }
+    .page-title span { color: var(--rose); }
+    .page-subtitle { font-size: 16px; line-height: 1.6; color: var(--text-muted); max-width: 480px; margin: 0 auto; }
 
-    /* Barre de progression */
-    .progress { display: flex; max-width: 480px; margin: 0 auto 44px; height: 14px; border: var(--border); border-radius: var(--radius-pill); overflow: hidden; background: var(--bg); }
-    .progress div { flex: 1; border-right: 2px solid var(--ink); }
-    .progress div:last-child { border-right: none; }
-
-    /* Animations navigation */
-    @keyframes zoomIn  { from { opacity:0; transform:scale(.94); } to { opacity:1; transform:scale(1); } }
-    @keyframes zoomOut { from { opacity:1; transform:scale(1);   } to { opacity:0; transform:scale(.94); } }
-    .step-zoom-in  { animation: zoomIn  .22s ease forwards; }
-    .step-zoom-out { animation: zoomOut .18s ease forwards; }
-
-    /* Grilles */
-    .grid { display: grid; gap: 16px; }
-    .grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
-    .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid.cols-2 { grid-template-columns: repeat(2, 1fr); max-width: 600px; margin: 0 auto; }
-
-    /* Cards */
-    .card { position: relative; border: var(--border); border-radius: var(--radius-md); background: #fff; padding: 24px 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; cursor: pointer; transition: transform .12s ease; }
-    .card:hover { transform: translateY(-2px); }
-    .card.selected { background: var(--selected-bg); box-shadow: var(--shadow-md); }
-    .card.disabled { opacity: .4; cursor: not-allowed; }
-    .card.disabled:hover { transform: none; }
-    .card .icon { font-size: 26px; line-height: 1; }
-    .card .label { font-weight: 700; font-size: 14px; line-height: 1.3; }
-    .card .hint { font-size: 12px; color: var(--text-subtle); line-height: 1.4; margin-top: 2px; }
-    .card .badge { position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; background: var(--orange); border: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: var(--ink); }
-    .card.large { padding: 28px 18px; border-radius: var(--radius-lg); }
-    .card.large .label { font-size: 16px; }
-
-    .constraint-helper { text-align: center; margin-bottom: 18px; font: 700 12px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
-
-    /* Bouton "aucune contrainte" — step 3 */
-    .btn-none-wrap { max-width: 600px; margin: 20px auto 0; }
-    .btn-none {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 16px 24px;
-      border: var(--border); border-radius: var(--radius-pill);
-      background: #fff; cursor: pointer; font-family: inherit;
-      font-weight: 700; font-size: 15px; color: var(--text-muted);
-      transition: background .12s, color .12s, box-shadow .12s, transform .12s;
+    /* Blocs d'input */
+    .input-block { margin-bottom: 40px; }
+    .input-label {
+      font: 700 11px/1 'Space Mono', monospace; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--text-light); margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
     }
-    .btn-none:hover { background: var(--bg); color: var(--ink); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-    .btn-none.active { background: var(--ink); color: var(--bg); box-shadow: var(--shadow-sm); }
-    .btn-none .btn-none-icon { font-size: 18px; }
+    .input-optional { font-weight: 400; color: var(--text-faint); text-transform: none; letter-spacing: 0; font-size: 11px; }
 
-    /* Navigation */
-    .step-nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 48px; }
-    .btn-back { display: inline-flex; align-items: center; gap: 8px; border: var(--border); border-radius: var(--radius-pill); padding: 14px 26px; font-weight: 700; font-size: 15px; cursor: pointer; background: #fff; font-family: inherit; }
-    .btn-back:hover { background: var(--bg); }
-    .btn-back.hidden { visibility: hidden; }
-    .btn-next { display: inline-flex; align-items: center; gap: 9px; border: var(--border); border-radius: var(--radius-pill); padding: 15px 32px; font-weight: 700; font-size: 16px; cursor: pointer; font-family: inherit; background: #EFE6D6; color: var(--text-faint); }
-    .btn-next.ok { background: var(--orange); color: var(--ink); box-shadow: var(--shadow-sm); }
+    /* Grille filaments (6 cartes) */
+    .filament-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .fil-card {
+      border: var(--border); border-radius: var(--radius-md); background: #fff;
+      padding: 16px 8px; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; text-align: center;
+      cursor: pointer; transition: transform .12s, box-shadow .12s;
+      position: relative;
+    }
+    .fil-card:hover { transform: translateY(-2px); }
+    .fil-card.selected { box-shadow: var(--shadow-md); }
+    .fil-card.selected::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+    .fil-dot { width: 28px; height: 28px; border-radius: 50%; border: var(--border); flex-shrink: 0; }
+    .fil-name { font-family: 'Bagel Fat One', cursive; font-size: 15px; line-height: 1; }
+    .fil-hygro {
+      font: 700 9px/1 'Space Mono', monospace; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--text-faint);
+    }
+    .fil-hygro.high { color: var(--rose); }
 
-    /* Résultat */
-    .result-hero { background: var(--ink); color: var(--bg); border-radius: 24px; padding: 48px 40px; text-align: center; margin-bottom: 32px; }
-    .result-eyebrow { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--text-light); margin-bottom: 20px; }
-    .result-name { font-family: 'Bagel Fat One', cursive; font-size: 72px; line-height: 1; margin-bottom: 8px; }
-    .result-tagline { font-family: 'Bagel Fat One', cursive; font-size: 24px; opacity: .7; margin-bottom: 28px; }
-    .result-desc { font-size: 16px; line-height: 1.65; max-width: 560px; margin: 0 auto; color: var(--text-faint); }
+    /* Slider humidité */
+    .humidity-wrap { background: #fff; border: var(--border); border-radius: var(--radius-lg); padding: 28px 28px 24px; }
+    .humidity-value-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+    .humidity-value { font-family: 'Bagel Fat One', cursive; font-size: 48px; line-height: 1; }
+    .humidity-unit { font: 700 18px/1 'Space Mono', monospace; color: var(--text-muted); margin-left: 4px; }
+    .humidity-zone { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .hz-dry    { color: #5BAD6F; }
+    .hz-normal { color: var(--orange-doux); }
+    .hz-humid  { color: var(--orange); }
+    .hz-wet    { color: var(--rose); }
 
-    .recap { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
-    .recap-tag { background: #fff; border: 2px solid var(--ink); border-radius: var(--radius-pill); padding: 6px 14px; font: 700 11px/1 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .slider-track-wrap { position: relative; height: 16px; border-radius: var(--radius-pill); border: var(--border); overflow: visible; margin-bottom: 10px; }
+    .slider-gradient {
+      position: absolute; inset: 0; border-radius: inherit;
+      background: linear-gradient(to right, #5BAD6F 0%, #F89B6C 45%, #F2641E 65%, #F8556B 100%);
+    }
+    .slider-track-wrap input[type=range] {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: pointer; margin: 0; padding: 0; z-index: 2;
+    }
+    .slider-thumb-h {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; border: var(--border); box-shadow: 2px 2px 0 var(--ink);
+      pointer-events: none; z-index: 1; transition: left .04s;
+    }
+    .humidity-zones-row { display: flex; margin-top: 8px; }
+    .hz-segment { flex: 1; font: 700 9px/1 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; text-align: center; }
+    .hz-segment:first-child { text-align: left; }
+    .hz-segment:last-child { text-align: right; }
 
-    .strength-box { border: var(--border); border-radius: var(--radius-lg); background: #fff; padding: 28px 30px; max-width: 640px; margin: 0 auto 32px; box-shadow: var(--shadow-lg); }
-    .strength-title { font-family: 'Bagel Fat One', cursive; font-size: 21px; margin-bottom: 20px; }
-    .strength-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .strength-row:last-child { margin-bottom: 0; }
-    .strength-label { font: 700 12px/1 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; width: 130px; flex-shrink: 0; color: var(--text-muted); }
-    .strength-bar-wrap { flex: 1; height: 10px; background: #F0E8D8; border-radius: var(--radius-pill); overflow: hidden; border: var(--border-light); }
-    .strength-bar { height: 100%; border-radius: var(--radius-pill); transition: width .6s ease; }
-    .strength-val { font: 700 12px/1 'Space Mono', monospace; width: 28px; text-align: right; }
+    /* Signes visuels */
+    .signs-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .sign-card {
+      border: var(--border); border-radius: var(--radius-md); background: #fff;
+      padding: 18px 10px; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; text-align: center; cursor: pointer;
+      transition: transform .12s; position: relative;
+    }
+    .sign-card:hover { transform: translateY(-2px); }
+    .sign-card.selected { background: #FBE6D8; box-shadow: var(--shadow-md); }
+    .sign-card .badge {
+      position: absolute; top: -8px; right: -8px; width: 20px; height: 20px;
+      border-radius: 50%; background: var(--rose); border: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 11px; color: #fff;
+    }
+    .sign-icon { font-size: 22px; line-height: 1; }
+    .sign-label { font-weight: 700; font-size: 12px; line-height: 1.3; }
 
-    .alt-box { border: var(--border); border-radius: var(--radius-lg); background: #fff; padding: 28px 30px; max-width: 640px; margin: 0 auto 40px; text-align: left; box-shadow: var(--shadow-lg); }
-    .alt-box-title { font-family: 'Bagel Fat One', cursive; font-size: 21px; margin-bottom: 16px; }
-    .alt-row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: var(--border-light); }
-    .alt-row:last-child { border-bottom: none; }
-    .alt-dot { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink); margin-top: 4px; }
-    .alt-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-    .alt-reason { font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+    /* Zone résultat */
+    .result-placeholder {
+      border: 2.5px dashed rgba(26,21,16,.2); border-radius: var(--radius-lg);
+      padding: 48px; text-align: center; color: var(--text-faint);
+      font: 700 13px/1.5 'Space Mono', monospace; letter-spacing: .08em;
+      text-transform: uppercase;
+    }
 
-    .result-actions { text-align: center; margin-bottom: 40px; }
-    .btn-cta { display: inline-flex; align-items: center; gap: 10px; background: var(--orange); color: var(--ink); border: var(--border); border-radius: var(--radius-pill); padding: 18px 38px; font-weight: 700; font-size: 18px; box-shadow: var(--shadow-md); text-decoration: none; margin-bottom: 24px; transition: transform .12s, box-shadow .12s; }
-    .btn-cta:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink); color: var(--ink); }
-    .btn-restart { font: 700 12px/1 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--ink); padding-bottom: 3px; cursor: pointer; }
+    .result-card { border: var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
+
+    /* Bannière urgence */
+    .urgency-banner { padding: 24px 32px; display: flex; align-items: center; gap: 20px; }
+    .urgency-icon { font-size: 32px; line-height: 1; flex-shrink: 0; }
+    .urgency-text { }
+    .urgency-level { font-family: 'Bagel Fat One', cursive; font-size: 26px; line-height: 1.1; margin-bottom: 4px; }
+    .urgency-sub { font-size: 14px; line-height: 1.5; opacity: .85; }
+
+    /* Infos séchage */
+    .result-body { background: #fff; padding: 28px 32px; }
+    .result-info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+    .result-info-box { border: var(--border); border-radius: var(--radius-md); padding: 20px; }
+    .result-info-label {
+      font: 700 10px/1 'Space Mono', monospace; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--text-light); margin-bottom: 10px;
+    }
+    .result-info-value { font-family: 'Bagel Fat One', cursive; font-size: 36px; line-height: 1; margin-bottom: 4px; }
+    .result-info-sub { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Tips */
+    .result-tips-label {
+      font: 700 10px/1 'Space Mono', monospace; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--text-light); margin-bottom: 14px;
+    }
+    .tip-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: var(--border-light); }
+    .tip-row:first-of-type { border-top: none; padding-top: 0; }
+    .tip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose); flex-shrink: 0; margin-top: 6px; }
+    .tip-text { font-size: 14px; line-height: 1.55; color: var(--text-muted); }
 
     @media (max-width: 640px) {
-      .wrap { padding: 32px 16px; }
-      .grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
-      .grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
-      .grid.cols-2 { grid-template-columns: 1fr; max-width: 100%; }
-      .step-title { font-size: 28px; }
-      .result-hero { padding: 32px 20px; border-radius: var(--radius-md); }
-      .result-name { font-size: 52px; }
-      .result-tagline { font-size: 18px; }
-      .strength-label { width: 80px; font-size: 10px; }
-      .strength-box, .alt-box { padding: 20px 16px; }
-      .btn-back { padding: 12px 20px; font-size: 14px; }
-      .btn-next { padding: 12px 24px; font-size: 14px; }
-      .btn-cta { padding: 14px 24px; font-size: 16px; }
-      .step-nav { margin-top: 32px; }
+      .page-title { font-size: 32px; }
+      .filament-grid { grid-template-columns: repeat(3, 1fr); }
+      .signs-grid { grid-template-columns: repeat(3, 1fr); }
+      .result-info-row { grid-template-columns: 1fr; }
+      .urgency-banner { padding: 20px; }
+      .urgency-level { font-size: 22px; }
+      .result-body { padding: 20px; }
+      .humidity-wrap { padding: 20px 16px; }
+      .humidity-value { font-size: 36px; }
     }
   </style>
 </head>
 <body>
 
 <div id="hub-header"></div>
-<div class="wrap"><div id="app"></div></div>
-<div id="hub-footer" style="max-width:820px;margin:0 auto;padding:0 24px;"></div>
+<div class="wrap">
 
-<script src="/assets/data.fr.js"></script>
-<script src="/assets/data.en.js"></script>
+  <div class="page-head">
+    <div class="page-eyebrow">Outil #3 · Impression 3D</div>
+    <h1 class="page-title">Calculateur<br>de <span>séchage</span></h1>
+    <p class="page-subtitle">Indique ton filament, l'humidité ambiante et les signes observés. L'outil te dit si tu dois sécher, à quelle température et combien de temps.</p>
+  </div>
+
+  <!-- 1. Filament -->
+  <div class="input-block">
+    <div class="input-label">1 — Ton filament</div>
+    <div class="filament-grid" id="filament-grid"></div>
+  </div>
+
+  <!-- 2. Humidité -->
+  <div class="input-block">
+    <div class="input-label">2 — Humidité ambiante</div>
+    <div class="humidity-wrap">
+      <div class="humidity-value-row">
+        <div>
+          <span class="humidity-value" id="humidity-val">45</span>
+          <span class="humidity-unit">%</span>
+        </div>
+        <div class="humidity-zone" id="humidity-zone"></div>
+      </div>
+      <div class="slider-track-wrap">
+        <div class="slider-gradient"></div>
+        <input type="range" id="humidity-slider" min="0" max="100" value="45">
+        <div class="slider-thumb-h" id="humidity-thumb"></div>
+      </div>
+      <div class="humidity-zones-row">
+        <div class="hz-segment hz-dry">Sec</div>
+        <div class="hz-segment hz-normal">Normal</div>
+        <div class="hz-segment hz-humid">Humide</div>
+        <div class="hz-segment hz-wet">Très humide</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Signes -->
+  <div class="input-block">
+    <div class="input-label">3 — Signes visuels <span class="input-optional">— optionnel, sélectionne ce que tu observes</span></div>
+    <div class="signs-grid" id="signs-grid"></div>
+  </div>
+
+  <!-- Résultat -->
+  <div id="result"></div>
+
+  <div id="hub-footer"></div>
+</div>
+
 <script src="/assets/components.js"></script>
 <script src="/assets/data.js"></script>
 <script>
-/* ======================================================
-   SÉLECTEUR — Logique UI uniquement
-   Les données sont dans data.js
-====================================================== */
-
-renderHeader('selecteur');
+renderHeader('sechage');
 renderFooter();
 
-const PROGRESS_COLORS = ['#F89B6C', '#F8556B', '#5B22D6', '#F2641E', '#F89B6C'];
+/* ======================================================
+   DONNÉES FILAMENTS SÉCHAGE
+====================================================== */
+const FILAMENTS_SECHAGE = {
+  PLA: {
+    label: 'PLA', color: '#F2641E', textColor: '#1A1510',
+    sensitivityHumidity: 'low', hygroscopic: false,
+    tempMin: 45, tempMax: 55, tempIdeal: 50,
+    durationBase: 4, durationMax: 8,
+    tips: [
+      "Le PLA absorbe peu l'humidité mais se dégrade quand même avec le temps.",
+      "Ne pas dépasser 55 °C — il risque de ramollir dans le séchoir.",
+      "Un séchage préventif de 4 h suffit dans la plupart des cas."
+    ]
+  },
+  PETG: {
+    label: 'PETG', color: '#5B22D6', textColor: '#F8F0E3',
+    sensitivityHumidity: 'high', hygroscopic: true,
+    tempMin: 60, tempMax: 70, tempIdeal: 65,
+    durationBase: 6, durationMax: 12,
+    tips: [
+      "Le PETG est très hygroscopique — il absorbe l'humidité en quelques heures seulement.",
+      "Sécher systématiquement si la bobine est ouverte depuis plus d'une semaine.",
+      "Conserver dans une boîte hermétique avec des sachets de silicagel entre les impressions."
+    ]
+  },
+  ABS: {
+    label: 'ABS', color: '#F8556B', textColor: '#1A1510',
+    sensitivityHumidity: 'medium', hygroscopic: false,
+    tempMin: 70, tempMax: 80, tempIdeal: 75,
+    durationBase: 4, durationMax: 8,
+    tips: [
+      "L'ABS est moins hygroscopique que le PETG mais se dégrade à haute humidité.",
+      "Ne pas dépasser 80 °C pour éviter la déformation de la bobine plastique.",
+      "Un séchage de 4 à 6 h à 75 °C est généralement suffisant."
+    ]
+  },
+  ASA: {
+    label: 'ASA', color: '#1A1510', textColor: '#F8F0E3',
+    sensitivityHumidity: 'medium', hygroscopic: false,
+    tempMin: 70, tempMax: 80, tempIdeal: 75,
+    durationBase: 4, durationMax: 8,
+    tips: [
+      "L'ASA se comporte comme l'ABS face à l'humidité — sensibilité similaire.",
+      "Sécher à 70-80 °C pendant 4 à 8 h selon l'humidité ambiante.",
+      "Moins absorbant que le PETG — le stockage en boîte ouverte est toléré sur courte durée."
+    ]
+  },
+  TPU: {
+    label: 'TPU', color: '#F89B6C', textColor: '#1A1510',
+    sensitivityHumidity: 'very_high', hygroscopic: true,
+    tempMin: 50, tempMax: 60, tempIdeal: 55,
+    durationBase: 6, durationMax: 10,
+    tips: [
+      "Le TPU est très sensible à l'humidité — séchage quasi systématique recommandé.",
+      "Ne pas dépasser 60 °C pour éviter de ramollir ou déformer le filament souple.",
+      "Les signes sont souvent très visibles : bulles, stringing excessif, surface terne ou mate."
+    ]
+  },
+  Nylon: {
+    label: 'Nylon', color: '#8A7C64', textColor: '#F8F0E3',
+    sensitivityHumidity: 'extreme', hygroscopic: true,
+    tempMin: 70, tempMax: 90, tempIdeal: 80,
+    durationBase: 8, durationMax: 24,
+    tips: [
+      "Le Nylon est le filament le plus hygroscopique — il absorbe l'humidité en 1 à 2 h en air libre.",
+      "Sécher systématiquement, même si la bobine vient d'être ouverte.",
+      "Idéalement, imprimer directement depuis le séchoir pour éviter toute réabsorption."
+    ]
+  }
+};
 
-/* --- État --- */
-let state = { step:1, type:null, env:null, constraints:[], finition:null, level:null };
-let isNavigating = false;
+const SIGNES = [
+  { id: 'bulles',    icon: '●', label: 'Bulles ou\nclaquements' },
+  { id: 'sousex',   icon: '∿', label: 'Sous-extrusion\nirrégulière' },
+  { id: 'cassant',  icon: '✕', label: 'Filament\ncassant' },
+  { id: 'rugueux',  icon: '◈', label: 'Surface\nrugueuse' },
+  { id: 'string',   icon: '≋', label: 'Stringing\nexcessif' },
+];
 
-function resetState() {
-  state = { step:1, type:null, env:null, constraints:[], finition:null, level:null };
+/* ======================================================
+   ÉTAT
+====================================================== */
+let state = { filament: null, humidity: 45, signs: [] };
+
+/* ======================================================
+   CALCULS
+====================================================== */
+function getUrgency(filamentKey, humidity, signs) {
+  const f = FILAMENTS_SECHAGE[filamentKey];
+  const s = signs.length;
+  const sens = f.sensitivityHumidity;
+
+  if (sens === 'extreme') {
+    if (s >= 1 || humidity > 30) return 'urgent';
+    return 'recommande';
+  }
+  if (sens === 'very_high') {
+    if (s >= 2 || humidity > 55) return 'urgent';
+    if (s >= 1 || humidity > 35) return 'recommande';
+    return 'optionnel';
+  }
+  if (sens === 'high') {
+    if (s >= 2 || humidity > 60) return 'urgent';
+    if (s >= 1 || humidity > 40) return 'recommande';
+    return 'optionnel';
+  }
+  if (sens === 'medium') {
+    if (s >= 2 || humidity > 70) return 'urgent';
+    if (s >= 1 || humidity > 55) return 'recommande';
+    if (humidity > 40) return 'optionnel';
+    return 'non_necessaire';
+  }
+  // low
+  if (s >= 2) return 'urgent';
+  if (s >= 1 || humidity > 70) return 'recommande';
+  if (humidity > 50) return 'optionnel';
+  return 'non_necessaire';
 }
 
-function canProceed() {
-  const { step, type, env, finition, level } = state;
-  if (step === 1) return !!type;
-  if (step === 2) return !!env;
-  if (step === 3) return true; // optionnel
-  if (step === 4) return !!finition;
-  if (step === 5) return !!level;
-  return true;
+function getDuration(filamentKey, humidity, signs) {
+  const f = FILAMENTS_SECHAGE[filamentKey];
+  const humFactor = Math.max(0, Math.min(1, (humidity - 20) / 80));
+  const signBonus = signs.length * 1.5;
+  let d = f.durationBase + humFactor * (f.durationMax - f.durationBase) + signBonus;
+  d = Math.min(d, f.durationMax + 2);
+  return Math.round(d * 2) / 2; // arrondi à 0.5h
 }
 
-/* --- Actions --- */
-function sel(key, val)        { state[key] = val; render(); }
-function toggleConstraint(id) {
-  const i = state.constraints.indexOf(id);
-  if (i > -1) state.constraints.splice(i, 1);
-  else if (state.constraints.length < 3) state.constraints.push(id);
-  render();
-}
-function skipConstraints() {
-  state.constraints = [];
-  navigate(4);
-}
+const URGENCY_META = {
+  non_necessaire: {
+    color: '#4CAF50', textColor: '#fff',
+    icon: '✦', level: 'Séchage non nécessaire',
+    sub: 'Ton filament est probablement en bon état. Imprime sans crainte.'
+  },
+  optionnel: {
+    color: '#F89B6C', textColor: '#1A1510',
+    icon: '◐', level: 'Séchage optionnel',
+    sub: 'Pas indispensable, mais recommandé si tu veux une qualité optimale.'
+  },
+  recommande: {
+    color: '#F2641E', textColor: '#1A1510',
+    icon: '♨', level: 'Séchage recommandé',
+    sub: 'Ton filament a probablement absorbé de l\'humidité. Sèche-le avant d\'imprimer.'
+  },
+  urgent: {
+    color: '#F8556B', textColor: '#1A1510',
+    icon: '⚡', level: 'Séchage indispensable',
+    sub: 'Ton filament est humide. Imprimer ainsi donnera de mauvais résultats.'
+  }
+};
 
-function navigate(newStep) {
-  const wrapper = document.querySelector('#app > div');
-  if (!wrapper) { state.step = newStep; render(); return; }
-  wrapper.classList.add('step-zoom-out');
-  setTimeout(() => {
-    state.step = newStep;
-    isNavigating = true;
-    render();
-    isNavigating = false;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 180);
-}
+const HUMIDITY_ZONES = [
+  { max: 35,  label: 'Sec',          cls: 'hz-dry'    },
+  { max: 55,  label: 'Normal',       cls: 'hz-normal'  },
+  { max: 70,  label: 'Humide',       cls: 'hz-humid'   },
+  { max: 101, label: 'Très humide',  cls: 'hz-wet'     },
+];
 
-function next()    { if (canProceed()) navigate(Math.min(6, state.step + 1)); }
-function back()    { navigate(Math.max(1, state.step - 1)); }
-function restart() { resetState(); isNavigating = true; render(); isNavigating = false; }
-
-/* --- Helpers HTML --- */
-function cardHtml(o, selected, onclick, disabled = false) {
-  return `<div class="card ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}"
-    ${onclick && !disabled ? `onclick="${onclick}"` : ''}>
-    ${selected ? '<div class="badge">✓</div>' : ''}
-    <div class="icon">${o.icon}</div>
-    <div class="label">${o.label}</div>
-    ${o.hint ? `<div class="hint">${o.hint}</div>` : ''}
-  </div>`;
+function getHumidityZone(h) {
+  return HUMIDITY_ZONES.find(z => h < z.max) || HUMIDITY_ZONES[HUMIDITY_ZONES.length - 1];
 }
 
-function largeCardHtml(o, selected, onclick) {
-  return `<div class="card large ${selected ? 'selected' : ''}" onclick="${onclick}">
-    ${selected ? '<div class="badge">✓</div>' : ''}
-    <div class="label">${o.label}</div>
-    <div class="hint">${o.hint}</div>
-  </div>`;
+/* ======================================================
+   RENDU FILAMENTS
+====================================================== */
+function renderFilamentGrid() {
+  document.getElementById('filament-grid').innerHTML =
+    Object.entries(FILAMENTS_SECHAGE).map(([key, f]) => `
+      <div class="fil-card ${state.filament === key ? 'selected' : ''}"
+           onclick="selectFilament('${key}')"
+           style="${state.filament === key ? `box-shadow:5px 5px 0 ${f.color};` : ''}">
+        ${state.filament === key ? `<style>.fil-card[onclick="selectFilament('${key}')"]::before{background:${f.color};}</style>` : ''}
+        <div class="fil-dot" style="background:${f.color};"></div>
+        <div class="fil-name">${f.label}</div>
+        <div class="fil-hygro ${f.hygroscopic ? 'high' : ''}">${f.hygroscopic ? 'Hygro' : 'Stable'}</div>
+      </div>`).join('');
 }
 
-function strengthBarsHtml(scores, color) {
-  return Object.entries(scores).map(([k, v]) => `
-    <div class="strength-row">
-      <div class="strength-label">${SCORE_LABELS[k]}</div>
-      <div class="strength-bar-wrap"><div class="strength-bar" style="width:${v/5*100}%;background:${color};"></div></div>
-      <div class="strength-val">${v}/5</div>
+/* ======================================================
+   RENDU SLIDER HUMIDITÉ
+====================================================== */
+function renderHumiditySlider() {
+  const h   = state.humidity;
+  const pct = h / 100;
+  const zone = getHumidityZone(h);
+
+  document.getElementById('humidity-val').textContent  = h;
+  document.getElementById('humidity-thumb').style.left = `calc(${pct * 100}% )`;
+
+  const zoneEl = document.getElementById('humidity-zone');
+  zoneEl.textContent = zone.label;
+  zoneEl.className   = 'humidity-zone ' + zone.cls;
+}
+
+/* ======================================================
+   RENDU SIGNES
+====================================================== */
+function renderSigns() {
+  document.getElementById('signs-grid').innerHTML = SIGNES.map(s => `
+    <div class="sign-card ${state.signs.includes(s.id) ? 'selected' : ''}"
+         onclick="toggleSign('${s.id}')">
+      ${state.signs.includes(s.id) ? '<div class="badge">✓</div>' : ''}
+      <div class="sign-icon">${s.icon}</div>
+      <div class="sign-label">${s.label.replace('\n', '<br>')}</div>
     </div>`).join('');
 }
 
-function recapHtml() {
-  const { type, env, constraints, finition, level } = state;
-  const tags = [
-    Q_TYPE.find(d => d.id === type)?.label,
-    Q_ENV.find(d => d.id === env)?.label,
-    ...constraints.map(c => Q_CONSTRAINTS.find(d => d.id === c)?.label),
-    Q_FINISH.find(d => d.id === finition)?.label,
-    Q_LEVEL.find(d => d.id === level)?.label,
-  ].filter(Boolean);
-  return tags.map(t => `<span class="recap-tag">${t}</span>`).join('');
-}
+/* ======================================================
+   RENDU RÉSULTAT
+====================================================== */
+function renderResult() {
+  const el = document.getElementById('result');
 
-/* --- Rendu --- */
-function render() {
-  const app = document.getElementById('app');
-  const { step, type, env, constraints, finition, level } = state;
-  const anim = isNavigating ? 'step-zoom-in' : '';
-
-  /* RÉSULTAT */
-  if (step === 6) {
-    const key    = decideFilament(type, env, constraints, finition, level);
-    const f      = FILAMENTS[key];
-    const barCol = key === 'ASA' ? '#F2641E' : f.color;
-    const others = ALL_FILAMENTS.filter(k => k !== key);
-
-    app.innerHTML = `<div class="${anim}">
-      <div class="recap">${recapHtml()}</div>
-      <div class="result-hero" style="border:2.5px solid ${f.color};box-shadow:8px 8px 0 ${f.color};">
-        <div class="result-eyebrow">${LANG === 'en' ? 'Your ideal filament' : 'Ton filament idéal'}</div>
-        <div class="result-name" style="color:${f.color};">${key}</div>
-        <div class="result-tagline">${LANG === 'en' ? 'This is the filament you need.' : 'C\'est le filament qu\'il te faut.'}</div>
-        <div class="result-desc">${f.core}</div>
-      </div>
-      <div class="strength-box">
-        <div class="strength-title">${LANG === 'en' ? 'Its strengths' : 'Ses points forts'}</div>
-        ${strengthBarsHtml(f.scores, barCol)}
-      </div>
-      <div class="alt-box">
-        <div class="alt-box-title">${LANG === 'en' ? 'Why not the others?' : 'Pourquoi pas les autres ?'}</div>
-        ${others.map(k => {
-          const o = FILAMENTS[k];
-          return `<div class="alt-row">
-            <span class="alt-dot" style="background:${o.color};"></span>
-            <div><div class="alt-name">${k}</div><div class="alt-reason">${o.whyNot}</div></div>
-          </div>`;
-        }).join('')}
-      </div>
-      <div class="result-actions">
-        <a class="btn-cta" href="${f.affiliateLink || '#'}"
-          target="${f.affiliateLink ? '_blank' : '_self'}" rel="noopener"
-          ${f.affiliateLink ? '' : 'onclick="return false;"'}>
-          ${LANG === 'en' ? 'See the recommended filament →' : 'Voir le filament recommandé →'}
-        </a>
-        <div><span class="btn-restart" onclick="restart()">↺ ${LANG === 'en' ? 'Retake the test' : 'Refaire le test'}</span></div>
-      </div>
-    </div>`;
+  if (!state.filament) {
+    el.innerHTML = `<div class="result-placeholder">← Sélectionne un filament pour obtenir ta recommandation</div>`;
     return;
   }
 
-  /* ÉTAPES */
-  const meta  = STEP_META[step];
-  const ok    = canProceed();
-  const pbar  = PROGRESS_COLORS.map((c, i) =>
-    `<div style="background:${step >= i+1 ? c : 'var(--bg)'};"></div>`).join('');
+  const f        = FILAMENTS_SECHAGE[state.filament];
+  const urgency  = getUrgency(state.filament, state.humidity, state.signs);
+  const meta     = URGENCY_META[urgency];
+  const duration = getDuration(state.filament, state.humidity, state.signs);
+  const durationStr = duration % 1 === 0 ? `${duration}h` : `${duration}h`;
 
-  let content = '';
-  if (step === 1) {
-    content = `<div class="grid cols-5">${Q_TYPE.map(o => cardHtml(o, type === o.id, `sel('type','${o.id}')`)).join('')}</div>`;
-  } else if (step === 2) {
-    content = `<div class="grid cols-3">${Q_ENV.map(o => cardHtml(o, env === o.id, `sel('env','${o.id}')`)).join('')}</div>`;
-  } else if (step === 3) {
-    const atMax = constraints.length >= 3;
-    const hasConstraints = constraints.length > 0;
-    content = `
-      <div class="constraint-helper">${hasConstraints
-        ? (LANG === 'en' ? `${constraints.length}/3 selected` : `${constraints.length}/3 sélectionnée${constraints.length > 1 ? 's' : ''}`)
-        : (LANG === 'en' ? 'Select up to 3 constraints, or skip.' : 'Sélectionne jusqu\'à 3 contraintes, ou passe directement.')
-      }</div>
-      <div class="grid cols-2">${Q_CONSTRAINTS.map(o => {
-        const sel = constraints.includes(o.id);
-        return cardHtml(o, sel, `toggleConstraint('${o.id}')`, !sel && atMax);
-      }).join('')}</div>
-      <div class="btn-none-wrap">
-        <button class="btn-none ${!hasConstraints ? 'active' : ''}" onclick="skipConstraints()">
-          <span class="btn-none-icon">○</span>
-          ${LANG === 'en' ? 'No physical constraints — skip to next step' : 'Aucune contrainte physique — passer à l\'étape suivante'}
-        </button>
-      </div>`;
-  } else if (step === 4) {
-    content = `<div class="grid cols-2">${Q_FINISH.map(o => cardHtml(o, finition === o.id, `sel('finition','${o.id}')`)).join('')}</div>`;
-  } else if (step === 5) {
-    content = `<div class="grid cols-3">${Q_LEVEL.map(o => largeCardHtml(o, level === o.id, `sel('level','${o.id}')`)).join('')}</div>`;
-  }
+  const tempStr = urgency === 'non_necessaire'
+    ? '—'
+    : `${f.tempIdeal} °C`;
 
-  app.innerHTML = `<div class="${anim}">
-    <div class="step-head">
-      <div class="step-eyebrow" style="color:${meta.color};">${meta.eyebrow}</div>
-      <div class="step-title">${meta.title}</div>
-      <div class="step-subtitle">${meta.subtitle}</div>
-    </div>
-    <div class="progress">${pbar}</div>
-    ${content}
-    <div class="step-nav">
-      <div class="btn-back ${step === 1 ? 'hidden' : ''}" onclick="back()">← ${LANG === 'en' ? 'Back' : 'Retour'}</div>
-      <div class="btn-next ${ok ? 'ok' : ''}" onclick="next()">
-        ${step === 5 ? (LANG === 'en' ? 'See my result →' : 'Voir mon résultat →') : (LANG === 'en' ? 'Next →' : 'Suivant →')}
+  const tempSub = urgency === 'non_necessaire'
+    ? 'Séchage non requis'
+    : `Plage : ${f.tempMin}–${f.tempMax} °C`;
+
+  const durationSub = urgency === 'non_necessaire'
+    ? 'Séchage non requis'
+    : `En fonction de l'humidité et des signes`;
+
+  const tipsHtml = f.tips.map(t =>
+    `<div class="tip-row"><div class="tip-dot"></div><div class="tip-text">${t}</div></div>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="result-card" style="border-color:${meta.color}; box-shadow:6px 6px 0 ${meta.color};">
+      <div class="urgency-banner" style="background:${meta.color}; color:${meta.textColor};">
+        <div class="urgency-icon">${meta.icon}</div>
+        <div class="urgency-text">
+          <div class="urgency-level">${meta.level}</div>
+          <div class="urgency-sub">${meta.sub}</div>
+        </div>
       </div>
-    </div>
-  </div>`;
+      <div class="result-body">
+        <div class="result-info-row">
+          <div class="result-info-box">
+            <div class="result-info-label">Température</div>
+            <div class="result-info-value" style="color:${urgency !== 'non_necessaire' ? meta.color : 'var(--text-faint)'};">${tempStr}</div>
+            <div class="result-info-sub">${tempSub}</div>
+          </div>
+          <div class="result-info-box">
+            <div class="result-info-label">Durée estimée</div>
+            <div class="result-info-value" style="color:${urgency !== 'non_necessaire' ? meta.color : 'var(--text-faint)'};">${urgency !== 'non_necessaire' ? durationStr : '—'}</div>
+            <div class="result-info-sub">${durationSub}</div>
+          </div>
+        </div>
+        <div class="result-tips-label">Conseils pour le ${f.label}</div>
+        ${tipsHtml}
+      </div>
+    </div>`;
+}
+
+/* ======================================================
+   ACTIONS
+====================================================== */
+function selectFilament(key) {
+  state.filament = key;
+  render();
+  // Scroll vers le résultat sur mobile
+  setTimeout(() => {
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function toggleSign(id) {
+  const i = state.signs.indexOf(id);
+  if (i > -1) state.signs.splice(i, 1);
+  else state.signs.push(id);
+  render();
+}
+
+document.getElementById('humidity-slider').addEventListener('input', e => {
+  state.humidity = +e.target.value;
+  render();
+});
+
+/* ======================================================
+   RENDER GLOBAL
+====================================================== */
+function render() {
+  renderFilamentGrid();
+  renderHumiditySlider();
+  renderSigns();
+  renderResult();
 }
 
 render();

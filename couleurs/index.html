@@ -228,8 +228,6 @@
   <div id="hub-footer"></div>
 </div>
 
-<script src="/assets/data.fr.js"></script>
-<script src="/assets/data.en.js"></script>
 <script src="/assets/components.js"></script>
 <script src="/assets/data.js"></script>
 <script>
@@ -299,7 +297,7 @@ function colorName(h) {
 /* ======================================================
    DÉFINITION DES COMBINAISONS
 ====================================================== */
-var _COMBDUMMY = [
+const COMBINATIONS = [
   {
     id: 'complementaire',
     title: 'Complémentaire',
@@ -501,9 +499,9 @@ function copyHex() {
   const hex = hslToHex(hue, sat, lit).toUpperCase();
   navigator.clipboard.writeText(hex).catch(() => {});
   const btn = document.getElementById('btn-copy');
-  btn.textContent = LANG === 'en' ? 'Copied!' : 'Copié !';
+  btn.textContent = 'Copié !';
   btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = LANG === 'en' ? 'Copy' : LANG === 'en' ? 'Copy' : 'Copier'; btn.classList.remove('copied'); }, 1600);
+  setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 1600);
 }
 
 /* ======================================================
@@ -522,7 +520,7 @@ function updatePreview(skipInput) {
    RENDU DES CARTES COMBO
 ====================================================== */
 function renderCombos() {
-  document.getElementById('combos-grid').innerHTML = COMBINATIONS_LANG.map(combo => {
+  document.getElementById('combos-grid').innerHTML = COMBINATIONS.map(combo => {
     const colors = combo.getColors(hue, sat, lit);
     const hexes  = colors.map(c => hslToHex(c.h, c.s, c.l).toUpperCase());
 
