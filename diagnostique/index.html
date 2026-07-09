@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NervyFox — Diagnostiqueur de défauts</title>
+  <meta name="description" content="Identifie la cause de tes défauts d'impression 3D et corrige-les. PLA, PETG, ABS, ASA, TPU, Nylon. Gratuit par NervyFox.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    /* === DIAGNOSTIQUE UNIQUEMENT === */
+
+    --accent: var(--orange-doux);
+
+    .page-head { text-align: center; margin-bottom: 48px; }
+    .page-eyebrow { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--orange-doux); margin-bottom: 14px; }
+    .page-title { font-family: 'Bagel Fat One', cursive; font-size: 48px; line-height: 1.05; margin-bottom: 14px; }
+    .page-title span { color: var(--orange-doux); }
+    .page-subtitle { font-size: 16px; line-height: 1.6; color: var(--text-muted); max-width: 480px; margin: 0 auto; }
+
+    /* Blocs input */
+    .input-block { margin-bottom: 40px; }
+    .input-label {
+      font: 700 11px/1 'Space Mono', monospace; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--text-light); margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+    }
+
+    /* === LIGNE HAUTE : filament + extrudeur === */
+    .top-row {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 16px;
+      margin-bottom: 40px;
+      align-items: stretch;
+    }
+
+    /* Panneau filament */
+    .panel {
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      background: #fff;
+      padding: 24px 24px 20px;
+      box-shadow: var(--shadow-lg);
+    }
+    .panel-label {
+      font: 700 11px/1 'Space Mono', monospace; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--text-light); margin-bottom: 16px;
+    }
+
+    /* Dropdown filament */
+    .fil-select-wrap { position: relative; margin-bottom: 20px; }
+    .fil-select-wrap::after {
+      content: '▾'; position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%); font-size: 14px; color: var(--text-muted); pointer-events: none;
+    }
+    .fil-select {
+      width: 100%; appearance: none; -webkit-appearance: none;
+      border: var(--border); border-radius: var(--radius-md);
+      background: var(--bg); padding: 13px 40px 13px 16px;
+      font: 700 16px/1 'Bagel Fat One', cursive; color: var(--ink);
+      cursor: pointer; outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .fil-select:focus { border-color: var(--orange-doux); box-shadow: 3px 3px 0 var(--orange-doux); }
+
+    .fil-info {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; border: var(--border-light);
+      border-radius: var(--radius-md); background: var(--bg); min-height: 62px;
+    }
+    .fil-info-dot { width: 32px; height: 32px; border-radius: 50%; border: var(--border); flex-shrink: 0; }
+    .fil-info-name { font-family: 'Bagel Fat One', cursive; font-size: 18px; line-height: 1.1; margin-bottom: 3px; }
+    .fil-info-placeholder { font: 400 13px/1.4 'Space Grotesk', sans-serif; color: var(--text-faint); font-style: italic; }
+
+    /* Panneau extrudeur */
+    .extrudeur-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .ext-card {
+      border: var(--border); border-radius: var(--radius-md); background: var(--bg);
+      padding: 18px 14px; cursor: pointer; transition: transform .12s, box-shadow .12s;
+      text-align: center; position: relative;
+    }
+    .ext-card:hover { transform: translateY(-2px); }
+    .ext-card.selected { background: #FBE6D8; box-shadow: var(--shadow-md); }
+    .ext-card.selected::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; background: var(--orange-doux); border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+    .ext-badge {
+      position: absolute; top: -8px; right: -8px; width: 20px; height: 20px;
+      border-radius: 50%; background: var(--orange-doux); border: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 11px; color: #fff;
+    }
+    .ext-icon { font-size: 28px; line-height: 1; margin-bottom: 8px; }
+    .ext-name { font-family: 'Bagel Fat One', cursive; font-size: 16px; margin-bottom: 4px; }
+    .ext-hint { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+    .ext-examples { font: 700 9px/1.4 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--text-faint); margin-top: 6px; }
+
+    /* Explication extrudeur */
+    .ext-explication {
+      padding: 12px 16px; background: var(--bg); border-radius: var(--radius-md);
+      border: var(--border-light); font-size: 12px; line-height: 1.6; color: var(--text-subtle);
+    }
+    .ext-explication strong { color: var(--text-muted); }
+
+    /* === DÉFAUTS === */
+    .defauts-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .defaut-card {
+      border: var(--border); border-radius: var(--radius-md); background: #fff;
+      padding: 18px 10px; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; text-align: center; cursor: pointer;
+      transition: transform .12s; position: relative;
+    }
+    .defaut-card:hover { transform: translateY(-2px); }
+    .defaut-card.selected { background: #FBE6D8; box-shadow: var(--shadow-md); }
+    .defaut-card .badge {
+      position: absolute; top: -8px; right: -8px; width: 20px; height: 20px;
+      border-radius: 50%; background: var(--orange-doux); border: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 11px; color: #fff;
+    }
+    .defaut-icon { font-size: 22px; line-height: 1; }
+    .defaut-label { font-weight: 700; font-size: 12px; line-height: 1.3; }
+    .defaut-hint { font-size: 10px; color: var(--text-muted); line-height: 1.3; }
+
+    /* === RÉSULTAT === */
+    .result-placeholder {
+      border: 2.5px dashed rgba(26,21,16,.2); border-radius: var(--radius-lg);
+      padding: 48px; text-align: center; color: var(--text-faint);
+      font: 700 13px/1.5 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase;
+    }
+
+    .result-section { margin-bottom: 24px; }
+    .result-defaut-title {
+      font-family: 'Bagel Fat One', cursive; font-size: 22px;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .result-defaut-icon { font-size: 20px; }
+
+    /* Carte cause */
+    .cause-card {
+      border: var(--border); border-radius: var(--radius-lg);
+      background: #fff; padding: 22px 24px; margin-bottom: 12px;
+      box-shadow: var(--shadow-lg);
+    }
+    .cause-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .cause-prob {
+      font: 700 9px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase;
+      border: var(--border); border-radius: var(--radius-pill); padding: 5px 10px;
+    }
+    .cause-prob.principal { background: var(--orange-doux); color: var(--ink); border-color: var(--orange-doux); }
+    .cause-prob.secondaire { background: var(--bg); color: var(--text-muted); }
+    .cause-difficulte {
+      font: 700 9px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase;
+      border-radius: var(--radius-pill); padding: 5px 10px; margin-left: auto;
+    }
+    .diff-facile   { background: #E8F5E9; color: #2E7D32; border: 1.5px solid #A5D6A7; }
+    .diff-moyen    { background: #FFF3E0; color: #E65100; border: 1.5px solid #FFCC80; }
+    .diff-technique{ background: #FCE4EC; color: #C62828; border: 1.5px solid #F48FB1; }
+
+    .cause-text { font-weight: 600; font-size: 14px; line-height: 1.4; margin-bottom: 14px; color: var(--ink); }
+    .cause-actions { display: flex; flex-direction: column; gap: 8px; }
+    .cause-action {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; line-height: 1.55; color: var(--text-muted);
+    }
+    .action-num {
+      font: 700 10px/1 'Space Mono', monospace; letter-spacing: .06em;
+      background: var(--ink); color: var(--bg); border-radius: 50%;
+      width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+
+    /* Séparateur entre défauts */
+    .result-divider { border: none; border-top: 2px dashed rgba(26,21,16,.1); margin: 28px 0; }
+
+    @media (max-width: 640px) {
+      .page-title { font-size: 32px; }
+      .top-row { grid-template-columns: 1fr; }
+      .defauts-grid { grid-template-columns: repeat(2, 1fr); }
+      .extrudeur-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="hub-header"></div>
+<div class="wrap">
+
+  <div class="page-head">
+    <div class="page-eyebrow">Outil #4 · Impression 3D</div>
+    <h1 class="page-title">Diagnostiqueur<br>de <span>défauts</span></h1>
+    <p class="page-subtitle">Sélectionne ton filament, ton type d'extrudeur et les défauts que tu observes. L'outil identifie les causes et te donne les corrections dans l'ordre.</p>
+  </div>
+
+  <!-- LIGNE HAUTE -->
+  <div class="top-row">
+
+    <!-- Filament -->
+    <div class="panel">
+      <div class="panel-label">1 — Ton filament</div>
+      <div class="fil-select-wrap">
+        <select class="fil-select" id="fil-select">
+          <option value="">Choisir un filament…</option>
+          <option value="PLA">PLA</option>
+          <option value="PETG">PETG</option>
+          <option value="ABS">ABS</option>
+          <option value="ASA">ASA</option>
+          <option value="TPU">TPU</option>
+          <option value="Nylon">Nylon</option>
+        </select>
+      </div>
+      <div class="fil-info" id="fil-info">
+        <div class="fil-info-placeholder">Sélectionne un filament.</div>
+      </div>
+    </div>
+
+    <!-- Extrudeur -->
+    <div class="panel">
+      <div class="panel-label">2 — Type d'extrudeur</div>
+      <div class="extrudeur-grid">
+        <div class="ext-card" id="ext-dd" onclick="selectExt('dd')">
+          <div class="ext-icon">⬇</div>
+          <div class="ext-name">Direct drive</div>
+          <div class="ext-hint">Le moteur est sur la tête d'impression</div>
+          <div class="ext-examples">Bambu · Prusa MK4 · Ender S1 · K1</div>
+        </div>
+        <div class="ext-card" id="ext-bow" onclick="selectExt('bow')">
+          <div class="ext-icon">↪</div>
+          <div class="ext-name">Bowden</div>
+          <div class="ext-hint">Le moteur est fixe, le filament passe dans un tube</div>
+          <div class="ext-examples">Ender 3 · CR-10 · Neptune · Artillery</div>
+        </div>
+      </div>
+      <div class="ext-explication">
+        <strong>Comment savoir ?</strong> Regarde si un petit moteur se déplace avec la tête quand tu imprimes. Si oui → Direct drive. Sinon → Bowden.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DÉFAUTS -->
+  <div class="input-block">
+    <div class="input-label">3 — Défauts observés <span style="font-weight:400;color:var(--text-faint);text-transform:none;letter-spacing:0;font-size:11px;">— sélectionne tout ce que tu vois</span></div>
+    <div class="defauts-grid" id="defauts-grid"></div>
+  </div>
+
+  <!-- RÉSULTAT -->
+  <div id="result"></div>
+
+  <div id="hub-footer"></div>
+</div>
+
+<script src="/assets/components.js"></script>
+<script src="/assets/data.js"></script>
+<script>
+renderHeader('diagnostique');
+renderFooter();
+
+/* Couleurs filaments pour le dot */
+const FIL_COLORS = {
+  PLA: '#F2641E', PETG: '#5B22D6', ABS: '#F8556B',
+  ASA: '#1A1510', TPU: '#F89B6C', Nylon: '#8A7C64'
+};
+
+/* État */
+let state = { filament: null, extrudeur: null, defauts: [] };
+
+/* === FILAMENT === */
+document.getElementById('fil-select').addEventListener('change', e => {
+  state.filament = e.target.value || null;
+  renderFilInfo();
+  renderResult();
+});
+
+function renderFilInfo() {
+  const el  = document.getElementById('fil-info');
+  const key = state.filament;
+  if (!key) { el.innerHTML = `<div class="fil-info-placeholder">Sélectionne un filament.</div>`; return; }
+  el.innerHTML = `
+    <div class="fil-info-dot" style="background:${FIL_COLORS[key]};"></div>
+    <div><div class="fil-info-name">${key}</div></div>`;
+}
+
+/* === EXTRUDEUR === */
+function selectExt(type) {
+  state.extrudeur = type;
+  document.querySelectorAll('.ext-card').forEach(c => c.classList.remove('selected'));
+  const card = document.getElementById('ext-' + type);
+  card.classList.add('selected');
+  // badge check
+  card.querySelector('.ext-badge')?.remove();
+  const badge = document.createElement('div');
+  badge.className = 'ext-badge';
+  badge.textContent = '✓';
+  card.appendChild(badge);
+  renderResult();
+}
+
+/* === DÉFAUTS === */
+function renderDefauts() {
+  document.getElementById('defauts-grid').innerHTML = DEFAUTS.map(d => `
+    <div class="defaut-card ${state.defauts.includes(d.id) ? 'selected' : ''}"
+         onclick="toggleDefaut('${d.id}')">
+      ${state.defauts.includes(d.id) ? '<div class="badge">✓</div>' : ''}
+      <div class="defaut-icon">${d.icon}</div>
+      <div class="defaut-label">${d.label}</div>
+      <div class="defaut-hint">${d.hint}</div>
+    </div>`).join('');
+}
+
+function toggleDefaut(id) {
+  const i = state.defauts.indexOf(id);
+  if (i > -1) state.defauts.splice(i, 1);
+  else state.defauts.push(id);
+  renderDefauts();
+  renderResult();
+}
+
+/* === RÉSULTAT === */
+function renderResult() {
+  const el = document.getElementById('result');
+
+  if (!state.filament || !state.extrudeur || state.defauts.length === 0) {
+    const manque = [];
+    if (!state.filament)            manque.push('un filament');
+    if (!state.extrudeur)           manque.push('un type d\'extrudeur');
+    if (state.defauts.length === 0) manque.push('au moins un défaut');
+    el.innerHTML = `<div class="result-placeholder">Sélectionne ${manque.join(', ')} pour obtenir le diagnostic</div>`;
+    return;
+  }
+
+  const sections = state.defauts.map(defautId => {
+    const defaut  = DEFAUTS.find(d => d.id === defautId);
+    const causes  = getDiagnostic(defautId, state.filament, state.extrudeur);
+    if (!causes.length) return '';
+
+    const causesHtml = causes.map(c => {
+      const diffClass = c.difficulte === 'Facile' ? 'diff-facile' : c.difficulte === 'Moyen' ? 'diff-moyen' : 'diff-technique';
+      const actionsHtml = c.actions.map((a, i) => `
+        <div class="cause-action">
+          <div class="action-num">${i+1}</div>
+          <div>${a}</div>
+        </div>`).join('');
+      return `
+        <div class="cause-card">
+          <div class="cause-header">
+            <span class="cause-prob ${c.prob.toLowerCase()}">${c.prob}</span>
+            <span class="cause-difficulte ${diffClass}">${c.difficulte}</span>
+          </div>
+          <div class="cause-text">${c.cause}</div>
+          <div class="cause-actions">${actionsHtml}</div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="result-section">
+        <div class="result-defaut-title">
+          <span class="result-defaut-icon">${defaut.icon}</span>
+          ${defaut.label}
+        </div>
+        ${causesHtml}
+      </div>`;
+  }).filter(Boolean);
+
+  if (!sections.length) {
+    el.innerHTML = `<div class="result-placeholder">Aucune donnée pour cette combinaison — d'autres défauts arrivent bientôt.</div>`;
+    return;
+  }
+
+  el.innerHTML = sections.join('<hr class="result-divider">');
+}
+
+/* Init */
+renderDefauts();
+renderResult();
+</script>
+</body>
+</html>
