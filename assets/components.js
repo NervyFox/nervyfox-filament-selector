@@ -7,11 +7,11 @@
 const HUB_VERSION = 'V3.0.0';
 
 const NAV_PAGES = [
-  { id: 'accueil',    label: 'Accueil',            href: '/' },
-  { id: 'selecteur',  label: 'Sélecteur filament', href: '/selecteur/' },
-  { id: 'couleurs',   label: 'Couleurs',           href: '/couleurs/' },
-  { id: 'sechage',    label: 'Séchage',            href: '/sechage/' },
-  { id: 'guides',     label: 'Guides',             href: '#' },
+  { id: 'accueil',   label: 'Accueil',            href: '/' },
+  { id: 'selecteur', label: 'Sélecteur filament', href: '/selecteur/' },
+  { id: 'couleurs',  label: 'Couleurs',           href: '/couleurs/' },
+  { id: 'sechage',   label: 'Séchage',            href: '/sechage/' },
+  { id: 'guides',    label: 'Guides',             href: '#' },
 ];
 
 const TICKER_TEXT = '&nbsp;&nbsp;&nbsp;✦ OUTILS GRATUITS POUR MAKERS &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; DESIGNED WITH A 70S BRAIN &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; IMPRESSION 3D ACCESSIBLE À TOUS &nbsp;&nbsp;&nbsp;';
@@ -20,7 +20,6 @@ function renderHeader(activePage) {
   const navLinks = NAV_PAGES.map(p =>
     `<a href="${p.href}" class="${activePage === p.id ? 'active' : ''}">${p.label}</a>`
   ).join('');
-
   const mobileLinks = NAV_PAGES.map(p =>
     `<a href="${p.href}" class="${activePage === p.id ? 'active' : ''}" onclick="toggleMenu()">${p.label}</a>`
   ).join('');
@@ -45,7 +44,6 @@ function renderHeader(activePage) {
     </div>
   `;
 
-  // Ticker infini
   const t = document.getElementById('ticker');
   let pos = 0;
   const half = t.scrollWidth / 2;

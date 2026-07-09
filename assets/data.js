@@ -1,7 +1,6 @@
 /* ======================================================
    NERVYFOX HUB — data.js
    Toutes les données métier centralisées
-   Filaments, questions, arbre de décision
 ====================================================== */
 
 /* === FILAMENTS === */
@@ -45,7 +44,7 @@ const FILAMENTS = {
 const ALL_FILAMENTS = Object.keys(FILAMENTS);
 const SCORE_LABELS = { facilite:'Facilité', resistance:'Résistance', chaleur:'Chaleur', eau:'Eau / Humidité', finition:'Finition', cout:'Coût' };
 
-/* === QUESTIONS === */
+/* === QUESTIONS SÉLECTEUR === */
 const Q_TYPE = [
   { id:'deco',  label:"Objet décoratif",         icon:'✦', hint:"Figurine, vase, déco murale..." },
   { id:'proto', label:"Prototype / maquette",     icon:'◐', hint:"Test visuel, modèle de présentation" },
@@ -86,13 +85,13 @@ function decideFilament(type, env, constraints, finition, level) {
   const outdoor = env === 'ext' || env === 'both';
   const expert  = level === 'exp';
 
-  if (flex)  return 'TPU';
-  if (heat)  return (outdoor || uv) ? 'ASA' : (expert ? 'ABS' : 'PETG');
+  if (flex)    return 'TPU';
+  if (heat)    return (outdoor || uv) ? 'ASA' : (expert ? 'ABS' : 'PETG');
   if (outdoor) return uv ? 'ASA' : 'PETG';
-  if (water) return 'PETG';
+  if (water)   return 'PETG';
   if (type === 'deco' || type === 'proto') return 'PLA';
   if (type === 'tech') return expert ? 'ABS' : 'PETG';
-  if (shock) return 'PETG';
+  if (shock)   return 'PETG';
   if (finition === 'transparent') return 'PETG';
   return 'PLA';
 }

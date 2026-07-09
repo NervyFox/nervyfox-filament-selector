@@ -4,30 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NervyFox Hub — Outils gratuits pour makers</title>
-  <meta name="description" content="Des outils simples et gratuits pour bien imprimer en 3D. Sélecteur de filament, combinaisons de couleurs, calculateur de séchage, guides machines. Par NervyFox.">
+  <meta name="description" content="Des outils simples et gratuits pour bien imprimer en 3D. Par NervyFox.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/styles.css">
   <style>
-    /* === HOMEPAGE UNIQUEMENT === */
     .wrap { padding: 72px 24px 80px; }
 
+    /* Hero */
     .hero { margin-bottom: 72px; }
     .hero-eyebrow { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--orange-doux); margin-bottom: 16px; }
     .hero-title { font-family: 'Bagel Fat One', cursive; font-size: 56px; line-height: 1.05; margin-bottom: 20px; }
     .hero-title span { color: var(--orange); }
     .hero-desc { font-size: 17px; line-height: 1.65; color: var(--text-muted); max-width: 520px; margin-bottom: 36px; }
     .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
-
     .btn-primary { background: var(--orange); color: var(--ink); font-size: 14px; font-weight: 700; padding: 15px 30px; border-radius: var(--radius-pill); border: var(--border); box-shadow: var(--shadow-sm); text-decoration: none; transition: transform .12s, box-shadow .12s; }
     .btn-primary:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink); color: var(--ink); }
     .btn-secondary { background: #fff; color: var(--ink); font-size: 14px; font-weight: 700; padding: 15px 30px; border-radius: var(--radius-pill); border: var(--border); text-decoration: none; }
     .btn-secondary:hover { background: var(--bg); color: var(--ink); }
 
+    /* Section label */
     .section-label { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--text-light); margin-bottom: 24px; }
 
-    .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 64px; }
+    /* Grille outils */
+    .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 80px; }
     .tool-card { border: var(--border); border-radius: var(--radius-lg); padding: 28px 24px; background: #fff; position: relative; overflow: hidden; text-decoration: none; color: var(--ink); display: block; transition: transform .12s, box-shadow .12s; }
     .tool-card:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); color: var(--ink); }
     .tool-card.active { box-shadow: var(--shadow-md); }
@@ -40,6 +41,71 @@
     .tool-desc { font-size: 13px; line-height: 1.55; color: var(--text-muted); margin-bottom: 20px; }
     .tool-link { font: 700 12px/1 'Space Mono', monospace; letter-spacing: .06em; color: var(--orange); }
 
+    /* =============================================
+       SECTIONS DE PRÉSENTATION DES OUTILS
+    ============================================= */
+    .tool-section { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-bottom: 80px; }
+    .tool-section.reverse { direction: rtl; }
+    .tool-section.reverse > * { direction: ltr; }
+
+    .tool-section-text { }
+    .tool-section-eyebrow { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 16px; }
+    .tool-section-title { font-family: 'Bagel Fat One', cursive; font-size: 34px; line-height: 1.08; margin-bottom: 16px; }
+    .tool-section-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); margin-bottom: 24px; }
+    .tool-features { list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 10px; }
+    .tool-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+    .tool-features li::before { content: '✦'; font-size: 10px; margin-top: 4px; flex-shrink: 0; }
+    .btn-tool-cta { display: inline-flex; align-items: center; gap: 8px; border: var(--border); border-radius: var(--radius-pill); padding: 14px 28px; font-weight: 700; font-size: 14px; text-decoration: none; transition: transform .12s, box-shadow .12s; color: var(--ink); }
+    .btn-tool-cta:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); color: var(--ink); }
+
+    /* Cadre visuel commun */
+    .tool-visual { border: var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); background: #fff; }
+    .tool-visual-header { padding: 10px 14px; border-bottom: var(--border); display: flex; align-items: center; gap: 6px; }
+    .visual-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink); }
+    .tool-visual-body { padding: 20px; }
+
+    /* --- Mockup Sélecteur --- */
+    .mock-step-label { font: 700 10px/1 'Space Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--orange-doux); margin-bottom: 10px; }
+    .mock-step-title { font-family: 'Bagel Fat One', cursive; font-size: 18px; margin-bottom: 14px; }
+    .mock-progress { display: flex; height: 8px; border: 1.5px solid var(--ink); border-radius: var(--radius-pill); overflow: hidden; margin-bottom: 14px; }
+    .mock-progress div { flex: 1; border-right: 1.5px solid var(--ink); }
+    .mock-progress div:last-child { border-right: none; }
+    .mock-cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
+    .mock-card { border: 1.5px solid var(--ink); border-radius: 10px; padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 700; background: #fff; }
+    .mock-card.sel { background: var(--selected-bg); box-shadow: 3px 3px 0 var(--ink); }
+    .mock-card-icon { font-size: 16px; margin-bottom: 4px; }
+    .mock-nav { display: flex; justify-content: space-between; }
+    .mock-btn { font: 700 11px/1 'Space Mono', monospace; border: 1.5px solid var(--ink); border-radius: var(--radius-pill); padding: 8px 14px; font-size: 10px; background: #fff; }
+    .mock-btn.ok { background: var(--orange); }
+
+    /* --- Mockup Couleurs --- */
+    .mock-wheel-wrap { display: flex; justify-content: center; margin-bottom: 14px; }
+    .mock-wheel { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--ink); background: conic-gradient(hsl(0,75%,55%), hsl(45,75%,55%), hsl(90,75%,55%), hsl(135,75%,55%), hsl(180,75%,55%), hsl(225,75%,55%), hsl(270,75%,55%), hsl(315,75%,55%), hsl(360,75%,55%)); position: relative; }
+    .mock-wheel-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 46px; height: 46px; border-radius: 50%; background: #F2641E; border: 2px solid var(--ink); }
+    .mock-combo-row { display: flex; gap: 6px; margin-bottom: 8px; }
+    .mock-swatch { flex: 1; height: 36px; border-radius: 8px; border: 1.5px solid var(--ink); }
+    .mock-combo-label { font: 700 9px/1 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--text-light); margin-bottom: 6px; }
+
+    /* --- Mockup Séchage --- */
+    .mock-fil-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 12px; }
+    .mock-fil { border: 1.5px solid var(--ink); border-radius: 8px; padding: 7px 4px; text-align: center; font: 700 9px/1 'Space Grotesk', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .mock-fil.sel { box-shadow: 3px 3px 0 var(--ink); }
+    .mock-fil-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--ink); }
+    .mock-slider-track { height: 10px; border: 1.5px solid var(--ink); border-radius: var(--radius-pill); background: linear-gradient(to right, #5BAD6F, #F89B6C, #F2641E, #F8556B); margin-bottom: 12px; position: relative; }
+    .mock-slider-thumb { position: absolute; top: 50%; left: 45%; transform: translate(-50%,-50%); width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 1.5px solid var(--ink); }
+    .mock-result-banner { border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+    .mock-result-icon { font-size: 18px; }
+    .mock-result-text { font-family: 'Bagel Fat One', cursive; font-size: 14px; }
+    .mock-result-sub { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+    .mock-info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+    .mock-info-box { border: 1.5px solid var(--ink); border-radius: 8px; padding: 8px 10px; }
+    .mock-info-label { font: 700 8px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 4px; }
+    .mock-info-val { font-family: 'Bagel Fat One', cursive; font-size: 18px; }
+
+    /* Diviseur entre sections */
+    .section-divider { border: none; border-top: 1.5px dashed rgba(26,21,16,.15); margin: 0 0 80px; }
+
+    /* Bloc NervyFox */
     .nfox-block { background: var(--ink); border-radius: var(--radius-lg); padding: 40px; display: flex; align-items: center; gap: 32px; border: var(--border); }
     .nfox-content { flex: 1; }
     .nfox-eyebrow { font: 700 10px/1 'Space Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; }
@@ -55,17 +121,19 @@
       .hero-title { font-size: 36px; }
       .hero-desc { font-size: 15px; }
       .tools-grid { grid-template-columns: 1fr; }
+      .tool-section { grid-template-columns: 1fr; gap: 28px; }
+      .tool-section.reverse { direction: ltr; }
+      .tool-section-title { font-size: 26px; }
       .nfox-block { flex-direction: column; padding: 28px 20px; gap: 20px; }
       .nfox-logo { width: 80px; }
     }
   </style>
 </head>
 <body>
-
 <div id="hub-header"></div>
-
 <div class="wrap">
 
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-eyebrow">Hub Maker · Outils gratuits</div>
     <h1 class="hero-title">Tout ce qu'il faut<br>pour bien imprimer<br><span>en 3D.</span></h1>
@@ -76,40 +144,234 @@
     </div>
   </section>
 
+  <!-- GRILLE OUTILS -->
   <section>
     <div class="section-label">Les outils</div>
     <div class="tools-grid">
-
       <a href="/selecteur/" class="tool-card active">
         <div class="tool-status disponible">Disponible</div>
         <div class="tool-name">Sélecteur de filament</div>
         <div class="tool-desc">Tu décris ton projet, l'outil te dit quel filament choisir. PLA, PETG, ASA, TPU — zéro débat, juste la bonne réponse.</div>
         <div class="tool-link">Utiliser l'outil →</div>
       </a>
-
       <a href="/couleurs/" class="tool-card active">
         <div class="tool-status disponible">Disponible</div>
         <div class="tool-name">Combinaisons de couleurs</div>
         <div class="tool-desc">Tu choisis une couleur sur la roue, l'outil te propose les meilleures harmonies pour remplir tes slots AMS.</div>
         <div class="tool-link">Utiliser l'outil →</div>
       </a>
-
       <a href="/sechage/" class="tool-card active">
         <div class="tool-status disponible">Disponible</div>
         <div class="tool-name">Calculateur de séchage</div>
         <div class="tool-desc">Filament, humidité ambiante, signes visuels — l'outil te dit si tu dois sécher, à quelle température et pendant combien de temps.</div>
         <div class="tool-link">Utiliser l'outil →</div>
       </a>
-
       <div class="tool-card soon">
         <div class="tool-status bientot">Bientôt</div>
         <div class="tool-name">Guides machines</div>
         <div class="tool-desc">Fiches de référence par imprimante : Bambu Lab, Prusa, Creality. Les bons réglages, centralisés au même endroit.</div>
       </div>
-
     </div>
   </section>
 
+  <!-- ============================================
+       SECTION 1 — SÉLECTEUR DE FILAMENT
+  ============================================= -->
+  <section class="tool-section">
+    <div class="tool-section-text">
+      <div class="tool-section-eyebrow" style="color:var(--orange);">Outil #1 — Sélecteur de filament</div>
+      <h2 class="tool-section-title">Le bon filament,<br>sans se poser<br>de questions.</h2>
+      <p class="tool-section-desc">PLA, PETG, ABS, ASA, TPU — impossible de choisir sans contexte. Cet outil te guide en 5 étapes simples et te donne une réponse claire, adaptée à ton projet.</p>
+      <ul class="tool-features">
+        <li>5 étapes : type d'objet, environnement, contraintes, finition et niveau</li>
+        <li>Arbre de décision déterministe — pas d'IA, pas d'approximation</li>
+        <li>Page résultat avec barres de force et explication des alternatives</li>
+        <li>100 % gratuit, sans compte, sans pub</li>
+      </ul>
+      <a href="/selecteur/" class="btn-tool-cta" style="background:var(--orange); box-shadow:var(--shadow-sm);">
+        Utiliser le sélecteur →
+      </a>
+    </div>
+    <div class="tool-visual">
+      <div class="tool-visual-header">
+        <div class="visual-dot" style="background:var(--orange);"></div>
+        <div class="visual-dot"></div>
+        <div class="visual-dot"></div>
+        <span style="font:700 10px/1 'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-left:6px;">Sélecteur · Étape 1/5</span>
+      </div>
+      <div class="tool-visual-body">
+        <div class="mock-step-label">Étape 1/5</div>
+        <div class="mock-step-title">C'est quoi comme objet ?</div>
+        <div class="mock-progress">
+          <div style="background:var(--orange-doux);"></div>
+          <div></div><div></div><div></div><div></div>
+        </div>
+        <div class="mock-cards-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="mock-card sel">
+            <div class="mock-card-icon">✦</div>
+            <div>Décoratif</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-icon">◐</div>
+            <div>Prototype</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-icon">⌂</div>
+            <div>Fonctionnel</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-icon">∿</div>
+            <div>Souple</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-icon">⚙</div>
+            <div>Technique</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="mock-nav">
+          <div class="mock-btn" style="visibility:hidden;">← Retour</div>
+          <div class="mock-btn ok">Suivant →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================
+       SECTION 2 — COMBINAISONS DE COULEURS
+  ============================================= -->
+  <section class="tool-section reverse">
+    <div class="tool-section-text">
+      <div class="tool-section-eyebrow" style="color:var(--violet);">Outil #2 — Combinaisons de couleurs</div>
+      <h2 class="tool-section-title">Des palettes qui<br>fonctionnent,<br>pour ton AMS.</h2>
+      <p class="tool-section-desc">Choisir des couleurs de filament au hasard, c'est risquer un résultat décevant. Cet outil applique la théorie des couleurs pour te proposer des harmonies qui fonctionnent vraiment ensemble.</p>
+      <ul class="tool-features">
+        <li>Roue chromatique interactive — clique ou glisse pour choisir ta teinte</li>
+        <li>Contrôle de la saturation et de la luminosité</li>
+        <li>4 types d'harmonies : complémentaire, analogue, triadique, tétradique</li>
+        <li>Visualisation des 4 slots AMS avec les couleurs calculées</li>
+      </ul>
+      <a href="/couleurs/" class="btn-tool-cta" style="background:var(--violet);color:#F8F0E3;box-shadow:4px 4px 0 var(--ink);">
+        Utiliser l'outil →
+      </a>
+    </div>
+    <div class="tool-visual">
+      <div class="tool-visual-header">
+        <div class="visual-dot" style="background:var(--violet);"></div>
+        <div class="visual-dot"></div>
+        <div class="visual-dot"></div>
+        <span style="font:700 10px/1 'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-left:6px;">Couleurs · Roue</span>
+      </div>
+      <div class="tool-visual-body">
+        <div class="mock-wheel-wrap">
+          <div class="mock-wheel">
+            <div class="mock-wheel-inner"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;">
+          <span style="font:700 9px/1 'Space Mono',monospace;text-transform:uppercase;color:var(--text-light);width:64px;">Saturation</span>
+          <div style="flex:1;height:8px;border:1.5px solid var(--ink);border-radius:99px;background:linear-gradient(to right,hsl(22,10%,53%),hsl(22,100%,53%));"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
+          <span style="font:700 9px/1 'Space Mono',monospace;text-transform:uppercase;color:var(--text-light);width:64px;">Luminosité</span>
+          <div style="flex:1;height:8px;border:1.5px solid var(--ink);border-radius:99px;background:linear-gradient(to right,hsl(22,88%,10%),hsl(22,88%,50%),hsl(22,88%,90%));"></div>
+        </div>
+        <div class="mock-combo-label">Tétradique — 4 couleurs</div>
+        <div class="mock-combo-row">
+          <div class="mock-swatch" style="background:#F2641E;"></div>
+          <div class="mock-swatch" style="background:#6CF289;"></div>
+          <div class="mock-swatch" style="background:#1EC8F2;"></div>
+          <div class="mock-swatch" style="background:#891EF2;"></div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div style="flex:1;height:8px;border-radius:99px;border:1.5px solid var(--ink);background:#F2641E;"></div>
+          <div style="flex:1;height:8px;border-radius:99px;border:1.5px solid var(--ink);background:#6CF289;"></div>
+          <div style="flex:1;height:8px;border-radius:99px;border:1.5px solid var(--ink);background:#1EC8F2;"></div>
+          <div style="flex:1;height:8px;border-radius:99px;border:1.5px solid var(--ink);background:#891EF2;"></div>
+        </div>
+        <div style="font:700 8px/1 'Space Mono',monospace;text-transform:uppercase;color:var(--text-faint);margin-top:4px;">Slots AMS</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================
+       SECTION 3 — CALCULATEUR DE SÉCHAGE
+  ============================================= -->
+  <section class="tool-section">
+    <div class="tool-section-text">
+      <div class="tool-section-eyebrow" style="color:var(--rose);">Outil #3 — Calculateur de séchage</div>
+      <h2 class="tool-section-title">Sécher son filament,<br>au bon temps,<br>à la bonne temp.</h2>
+      <p class="tool-section-desc">L'humidité est la première cause de mauvaises impressions. Cet outil analyse ton filament, l'humidité ambiante et les signes que tu observes pour te donner une recommandation précise.</p>
+      <ul class="tool-features">
+        <li>6 filaments supportés : PLA, PETG, ABS, ASA, TPU et Nylon</li>
+        <li>Slider d'humidité avec zones visuelles (sec / normal / humide / très humide)</li>
+        <li>5 signes visuels de dégradation à sélectionner</li>
+        <li>4 niveaux d'urgence et durée de séchage calculée à la demi-heure près</li>
+      </ul>
+      <a href="/sechage/" class="btn-tool-cta" style="background:var(--rose);box-shadow:4px 4px 0 var(--ink);">
+        Utiliser l'outil →
+      </a>
+    </div>
+    <div class="tool-visual">
+      <div class="tool-visual-header">
+        <div class="visual-dot" style="background:var(--rose);"></div>
+        <div class="visual-dot"></div>
+        <div class="visual-dot"></div>
+        <span style="font:700 10px/1 'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-left:6px;">Séchage · Résultat</span>
+      </div>
+      <div class="tool-visual-body">
+        <div class="mock-fil-row">
+          <div class="mock-fil">
+            <div class="mock-fil-dot" style="background:#F2641E;"></div>PLA
+          </div>
+          <div class="mock-fil sel" style="box-shadow:3px 3px 0 #5B22D6;">
+            <div class="mock-fil-dot" style="background:#5B22D6;"></div>PETG
+          </div>
+          <div class="mock-fil">
+            <div class="mock-fil-dot" style="background:#F8556B;"></div>ABS
+          </div>
+          <div class="mock-fil">
+            <div class="mock-fil-dot" style="background:#1A1510;"></div>ASA
+          </div>
+          <div class="mock-fil">
+            <div class="mock-fil-dot" style="background:#F89B6C;"></div>TPU
+          </div>
+          <div class="mock-fil">
+            <div class="mock-fil-dot" style="background:#8A7C64;"></div>Nylon
+          </div>
+        </div>
+        <div style="font:700 9px/1 'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;">Humidité ambiante — 62%</div>
+        <div class="mock-slider-track">
+          <div class="mock-slider-thumb"></div>
+        </div>
+        <div class="mock-result-banner" style="background:var(--orange);border:1.5px solid var(--ink);">
+          <div class="mock-result-icon">♨</div>
+          <div>
+            <div class="mock-result-text">Séchage recommandé</div>
+            <div class="mock-result-sub">Ton filament a absorbé de l'humidité.</div>
+          </div>
+        </div>
+        <div class="mock-info-row">
+          <div class="mock-info-box">
+            <div class="mock-info-label">Température</div>
+            <div class="mock-info-val" style="color:var(--orange);">65 °C</div>
+          </div>
+          <div class="mock-info-box">
+            <div class="mock-info-label">Durée estimée</div>
+            <div class="mock-info-val" style="color:var(--orange);">8.5h</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- BLOC NERVYFOX -->
   <section>
     <div class="nfox-block">
       <div class="nfox-content">
@@ -118,20 +380,13 @@
         <div class="nfox-desc">NervyFox fabrique des objets de bureau rétrofuturistes en impression 3D, fabriqués à la main en France. Ce hub, c'est notre contribution à la communauté maker.</div>
         <a href="https://nervyfox.fr" target="_blank" class="nfox-cta">Voir la boutique →</a>
       </div>
-      <div class="nfox-logo">
-        <img src="/assets/logo-pill.png" alt="NervyFox">
-      </div>
+      <div class="nfox-logo"><img src="/assets/logo-pill.png" alt="NervyFox"></div>
     </div>
   </section>
 
   <div id="hub-footer"></div>
-
 </div>
-
 <script src="/assets/components.js"></script>
-<script>
-  renderHeader('accueil');
-  renderFooter();
-</script>
+<script>renderHeader('accueil'); renderFooter();</script>
 </body>
 </html>
