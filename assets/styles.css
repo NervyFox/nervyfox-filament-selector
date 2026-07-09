@@ -98,22 +98,13 @@ p { margin: 0; }
   .burger { display: flex; }
 }
 
-/* === GOOGLE TRANSLATE === */
-#google_translate_element { display: flex; align-items: center; }
-.goog-te-gadget { font-family: 'Space Mono', monospace !important; font-size: 0 !important; }
-.goog-te-gadget .goog-te-combo {
-  font: 700 11px/1 'Space Mono', monospace;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  border: var(--border);
-  border-radius: var(--radius-pill);
-  padding: 7px 12px;
-  background: #fff;
-  color: var(--ink);
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
+/* === LANG SWITCHER === */
+.lang-switcher { display: flex; align-items: center; gap: 4px; }
+.lang-btn {
+  font: 700 11px/1 'Space Mono', monospace; letter-spacing: .1em;
+  border: none; background: none; cursor: pointer; padding: 6px 4px;
+  color: var(--text-light); transition: color .12s;
 }
-.goog-te-gadget .goog-te-combo:hover { background: var(--bg); }
-.goog-logo-link, .goog-te-gadget span { display: none !important; }
+.lang-btn:hover { color: var(--ink); }
+.lang-btn.active { color: var(--ink); border-bottom: 2px solid var(--orange); padding-bottom: 4px; }
+.lang-sep { font: 400 11px/1 'Space Mono', monospace; color: var(--text-faint); }
