@@ -4,7 +4,19 @@
    VERSION unique ici — ne pas dupliquer ailleurs
 ====================================================== */
 
-const HUB_VERSION = 'V4.1.0';
+const HUB_VERSION = 'V4.1.2';
+
+/* === GOOGLE ANALYTICS === */
+(function() {
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-E5FB2L84GN';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E5FB2L84GN');
+})();
 
 const NAV_PAGES = [
   { id: 'accueil',      label: 'Accueil',            href: '/' },
