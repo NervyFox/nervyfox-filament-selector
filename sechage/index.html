@@ -217,7 +217,7 @@ renderFooter();
    DONNÉES FILAMENTS SÉCHAGE
 ====================================================== */
 /* FILAMENTS_SECHAGE chargé depuis data.js (FILAMENTS_SECHAGE_LANG) */
-const _FSDUMMY = {
+var _FSDUMMY = {
   PLA: {
     label: 'PLA', color: '#F2641E', textColor: '#1A1510',
     sensitivityHumidity: 'low', hygroscopic: false,
@@ -343,7 +343,7 @@ function getDuration(filamentKey, humidity, signs) {
   return Math.round(d * 2) / 2; // arrondi à 0.5h
 }
 
-const _UMDUMMY = {
+var _UMDUMMY = {
   non_necessaire: {
     color: '#4CAF50', textColor: '#fff',
     icon: '✦', level: 'Séchage non nécessaire',
@@ -366,7 +366,7 @@ const _UMDUMMY = {
   }
 };
 
-const _HZDUMMY = [
+var _HZDUMMY = [
   { max: 35,  label: 'Sec',          cls: 'hz-dry'    },
   { max: 55,  label: 'Normal',       cls: 'hz-normal'  },
   { max: 70,  label: 'Humide',       cls: 'hz-humid'   },
@@ -382,14 +382,14 @@ function getHumidityZone(h) {
 ====================================================== */
 function renderFilamentGrid() {
   document.getElementById('filament-grid').innerHTML =
-    Object.entries(FILAMENTS_SECHAGE).map(([key, f]) => `
+    Object.entries(FILAMENTS_SECHAGE_LANG).map(([key, f]) => `
       <div class="fil-card ${state.filament === key ? 'selected' : ''}"
            onclick="selectFilament('${key}')"
            style="${state.filament === key ? `box-shadow:5px 5px 0 ${f.color};` : ''}">
         ${state.filament === key ? `<style>.fil-card[onclick="selectFilament('${key}')"]::before{background:${f.color};}</style>` : ''}
         <div class="fil-dot" style="background:${f.color};"></div>
         <div class="fil-name">${f.label}</div>
-        <div class="fil-hygro ${f.hygroscopic ? 'high' : ''}">${f.hygroscopic ? 'Hygro' : 'Stable'}</div>
+        <div class="fil-hygro ${f.hygroscopic ? 'high' : ''}">${f.hygroscopic ? (IS_EN ? 'Hygro' : 'Hygro') : (IS_EN ? 'Stable' : 'Stable')}</div>
       </div>`).join('');
 }
 
