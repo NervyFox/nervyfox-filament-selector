@@ -92,10 +92,10 @@ function setLang(lang) {
   localStorage.setItem('nf-lang', lang);
 
   // Mettre à jour le switcher
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.dataset.lang === lang) btn.classList.add('active');
-  });
+  const btnFr = document.getElementById('lang-fr');
+  const btnEn = document.getElementById('lang-en');
+  if (btnFr) { btnFr.classList.toggle('active', lang === 'fr'); }
+  if (btnEn) { btnEn.classList.toggle('active', lang === 'en'); }
 
   // Mettre à jour les labels de nav
   document.querySelectorAll('.nav-label').forEach(el => {
@@ -129,9 +129,9 @@ function renderHeader(activePage) {
       <a href="/"><img class="masthead-logo" src="/assets/logo-wordmark.png" alt="NervyFox"></a>
       <nav>${navLinks}</nav>
       <div class="lang-switcher">
-        <button class="lang-btn ${currentLang === 'fr' ? 'active' : ''}" data-lang="fr" onclick="setLang('fr')">FR</button>
+        <button id="lang-fr" class="lang-btn ${currentLang === 'fr' ? 'active' : ''}" data-lang="fr" onclick="setLang('fr')">FR</button>
         <span class="lang-sep">·</span>
-        <button class="lang-btn ${currentLang === 'en' ? 'active' : ''}" data-lang="en" onclick="setLang('en')">EN</button>
+        <button id="lang-en" class="lang-btn ${currentLang === 'en' ? 'active' : ''}" data-lang="en" onclick="setLang('en')">EN</button>
       </div>
       <a href="https://nervyfox.fr" target="_blank" class="cta-site">nervyfox.fr →</a>
       <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
