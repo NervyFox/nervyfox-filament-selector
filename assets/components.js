@@ -60,6 +60,7 @@ function renderFooter() {
       <img src="/assets/logo-pill.png" alt="">
       <div class="tag">NervyFox · Hub Maker · Designed with a 70s brain</div>
       <div class="version">${HUB_VERSION}</div>
+      <div class="version" style="margin-top:6px;">© 2025 NervyFox — Tous droits réservés</div>
     </div>
   `;
 }
