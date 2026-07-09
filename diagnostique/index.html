@@ -256,6 +256,8 @@
   <div id="hub-footer"></div>
 </div>
 
+<script src="/assets/data.fr.js"></script>
+<script src="/assets/data.en.js"></script>
 <script src="/assets/components.js"></script>
 <script src="/assets/data.js"></script>
 <script>
@@ -328,9 +330,9 @@ function renderResult() {
 
   if (!state.filament || !state.extrudeur || state.defauts.length === 0) {
     const manque = [];
-    if (!state.filament)            manque.push('un filament');
+    if (!state.filament)            manque.push(LANG === 'en' ? 'a filament' : 'un filament');
     if (!state.extrudeur)           manque.push('un type d\'extrudeur');
-    if (state.defauts.length === 0) manque.push('au moins un défaut');
+    if (state.defauts.length === 0) manque.push(LANG === 'en' ? 'at least one defect' : 'au moins un défaut');
     el.innerHTML = `<div class="result-placeholder">Sélectionne ${manque.join(', ')} pour obtenir le diagnostic</div>`;
     return;
   }

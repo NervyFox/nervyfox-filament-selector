@@ -19,7 +19,7 @@
     .page-title span { color: var(--rose); }
     .page-subtitle { font-size: 16px; line-height: 1.6; color: var(--text-muted); max-width: 480px; margin: 0 auto; }
 
-    /* Bloc d'input */
+    /* Blocs d'input */
     .input-block { margin-bottom: 40px; }
     .input-label {
       font: 700 11px/1 'Space Mono', monospace; letter-spacing: .16em; text-transform: uppercase;
@@ -27,152 +27,41 @@
     }
     .input-optional { font-weight: 400; color: var(--text-faint); text-transform: none; letter-spacing: 0; font-size: 11px; }
 
-    /* =============================================
-       BLOC COMBINÉ : FILAMENT + HUMIDITÉ (2 col)
-    ============================================= */
-    .top-row {
-      display: grid;
-      grid-template-columns: 1fr 1.6fr;
-      gap: 16px;
-      margin-bottom: 40px;
-      align-items: stretch;
-    }
-
-    /* --- Panneau filament (gauche) --- */
-    .filament-panel {
-      border: var(--border);
-      border-radius: var(--radius-lg);
-      background: #fff;
-      padding: 24px 24px 20px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow-lg);
-    }
-    .panel-label {
-      font: 700 11px/1 'Space Mono', monospace; letter-spacing: .16em; text-transform: uppercase;
-      color: var(--text-light); margin-bottom: 16px;
-    }
-
-    /* Dropdown custom */
-    .fil-select-wrap {
+    /* Grille filaments (6 cartes) */
+    .filament-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .fil-card {
+      border: var(--border); border-radius: var(--radius-md); background: #fff;
+      padding: 16px 8px; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; text-align: center;
+      cursor: pointer; transition: transform .12s, box-shadow .12s;
       position: relative;
-      margin-bottom: 20px;
     }
-    .fil-select-wrap::after {
-      content: '▾';
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      color: var(--text-muted);
-      pointer-events: none;
+    .fil-card:hover { transform: translateY(-2px); }
+    .fil-card.selected { box-shadow: var(--shadow-md); }
+    .fil-card.selected::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
-    .fil-select {
-      width: 100%;
-      appearance: none;
-      -webkit-appearance: none;
-      border: var(--border);
-      border-radius: var(--radius-md);
-      background: var(--bg);
-      padding: 13px 40px 13px 16px;
-      font: 700 16px/1 'Bagel Fat One', cursive;
-      color: var(--ink);
-      cursor: pointer;
-      outline: none;
-      transition: border-color .15s, box-shadow .15s;
+    .fil-dot { width: 28px; height: 28px; border-radius: 50%; border: var(--border); flex-shrink: 0; }
+    .fil-name { font-family: 'Bagel Fat One', cursive; font-size: 15px; line-height: 1; }
+    .fil-hygro {
+      font: 700 9px/1 'Space Mono', monospace; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--text-faint);
     }
-    .fil-select:focus {
-      border-color: var(--rose);
-      box-shadow: 3px 3px 0 var(--rose);
-    }
-    .fil-select option {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 600;
-    }
+    .fil-hygro.high { color: var(--rose); }
 
-    /* Infos filament sélectionné */
-    .fil-info {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      border: var(--border-light);
-      border-radius: var(--radius-md);
-      background: var(--bg);
-      min-height: 62px;
-      transition: all .2s ease;
-    }
-    .fil-info-dot {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: var(--border);
-      flex-shrink: 0;
-      transition: background .2s;
-    }
-    .fil-info-text { flex: 1; min-width: 0; }
-    .fil-info-name {
-      font-family: 'Bagel Fat One', cursive;
-      font-size: 18px;
-      line-height: 1.1;
-      margin-bottom: 3px;
-    }
-    .fil-info-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .fil-tag {
-      font: 700 9px/1 'Space Mono', monospace;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      border: var(--border-light);
-      border-radius: var(--radius-pill);
-      padding: 4px 8px;
-      background: #fff;
-      color: var(--text-muted);
-    }
-    .fil-tag.hygro {
-      background: #FBE6D8;
-      color: var(--rose);
-      border-color: var(--rose);
-    }
-    .fil-info-placeholder {
-      font: 400 13px/1.4 'Space Grotesk', sans-serif;
-      color: var(--text-faint);
-      font-style: italic;
-    }
-
-    /* --- Panneau humidité (droite) --- */
-    .humidity-panel {
-      border: var(--border);
-      border-radius: var(--radius-lg);
-      background: #fff;
-      padding: 24px 28px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: var(--shadow-lg);
-    }
-    .humidity-value-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .humidity-value { font-family: 'Bagel Fat One', cursive; font-size: 52px; line-height: 1; }
-    .humidity-unit { font: 700 20px/1 'Space Mono', monospace; color: var(--text-muted); margin-left: 4px; }
+    /* Slider humidité */
+    .humidity-wrap { background: #fff; border: var(--border); border-radius: var(--radius-lg); padding: 28px 28px 24px; }
+    .humidity-value-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+    .humidity-value { font-family: 'Bagel Fat One', cursive; font-size: 48px; line-height: 1; }
+    .humidity-unit { font: 700 18px/1 'Space Mono', monospace; color: var(--text-muted); margin-left: 4px; }
     .humidity-zone { font: 700 11px/1 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
     .hz-dry    { color: #5BAD6F; }
     .hz-normal { color: var(--orange-doux); }
     .hz-humid  { color: var(--orange); }
     .hz-wet    { color: var(--rose); }
 
-    .slider-track-wrap {
-      position: relative; height: 16px; border-radius: var(--radius-pill);
-      border: var(--border); overflow: visible; margin-bottom: 10px;
-    }
+    .slider-track-wrap { position: relative; height: 16px; border-radius: var(--radius-pill); border: var(--border); overflow: visible; margin-bottom: 10px; }
     .slider-gradient {
       position: absolute; inset: 0; border-radius: inherit;
       background: linear-gradient(to right, #5BAD6F 0%, #F89B6C 45%, #F2641E 65%, #F8556B 100%);
@@ -187,27 +76,13 @@
       background: #fff; border: var(--border); box-shadow: 2px 2px 0 var(--ink);
       pointer-events: none; z-index: 1; transition: left .04s;
     }
-    .humidity-zones-row {
-      display: flex;
-      margin-top: 8px;
-    }
-    .hz-segment {
-      flex: 1;
-      font: 700 9px/1 'Space Mono', monospace;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      text-align: center;
-    }
+    .humidity-zones-row { display: flex; margin-top: 8px; }
+    .hz-segment { flex: 1; font: 700 9px/1 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; text-align: center; }
     .hz-segment:first-child { text-align: left; }
-    .hz-segment:last-child  { text-align: right; }
+    .hz-segment:last-child { text-align: right; }
 
-    /* === SIGNES VISUELS === */
-    .input-block { margin-bottom: 40px; }
-    .signs-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
+    /* Signes visuels */
+    .signs-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
     .sign-card {
       border: var(--border); border-radius: var(--radius-md); background: #fff;
       padding: 18px 10px; display: flex; flex-direction: column;
@@ -225,18 +100,24 @@
     .sign-icon { font-size: 22px; line-height: 1; }
     .sign-label { font-weight: 700; font-size: 12px; line-height: 1.3; }
 
-    /* === RÉSULTAT === */
+    /* Zone résultat */
     .result-placeholder {
       border: 2.5px dashed rgba(26,21,16,.2); border-radius: var(--radius-lg);
       padding: 48px; text-align: center; color: var(--text-faint);
       font: 700 13px/1.5 'Space Mono', monospace; letter-spacing: .08em;
       text-transform: uppercase;
     }
+
     .result-card { border: var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
+
+    /* Bannière urgence */
     .urgency-banner { padding: 24px 32px; display: flex; align-items: center; gap: 20px; }
     .urgency-icon { font-size: 32px; line-height: 1; flex-shrink: 0; }
+    .urgency-text { }
     .urgency-level { font-family: 'Bagel Fat One', cursive; font-size: 26px; line-height: 1.1; margin-bottom: 4px; }
     .urgency-sub { font-size: 14px; line-height: 1.5; opacity: .85; }
+
+    /* Infos séchage */
     .result-body { background: #fff; padding: 28px 32px; }
     .result-info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
     .result-info-box { border: var(--border); border-radius: var(--radius-md); padding: 20px; }
@@ -246,6 +127,8 @@
     }
     .result-info-value { font-family: 'Bagel Fat One', cursive; font-size: 36px; line-height: 1; margin-bottom: 4px; }
     .result-info-sub { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Tips */
     .result-tips-label {
       font: 700 10px/1 'Space Mono', monospace; letter-spacing: .14em;
       text-transform: uppercase; color: var(--text-light); margin-bottom: 14px;
@@ -255,17 +138,16 @@
     .tip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose); flex-shrink: 0; margin-top: 6px; }
     .tip-text { font-size: 14px; line-height: 1.55; color: var(--text-muted); }
 
-    /* === RESPONSIVE === */
     @media (max-width: 640px) {
       .page-title { font-size: 32px; }
-      .top-row { grid-template-columns: 1fr; }
+      .filament-grid { grid-template-columns: repeat(3, 1fr); }
       .signs-grid { grid-template-columns: repeat(3, 1fr); }
       .result-info-row { grid-template-columns: 1fr; }
       .urgency-banner { padding: 20px; }
       .urgency-level { font-size: 22px; }
       .result-body { padding: 20px; }
-      .humidity-panel { padding: 20px 18px; }
-      .humidity-value { font-size: 40px; }
+      .humidity-wrap { padding: 20px 16px; }
+      .humidity-value { font-size: 36px; }
     }
   </style>
 </head>
@@ -280,58 +162,38 @@
     <p class="page-subtitle">Indique ton filament, l'humidité ambiante et les signes observés. L'outil te dit si tu dois sécher, à quelle température et combien de temps.</p>
   </div>
 
-  <!-- LIGNE DU HAUT : Filament (gauche) + Humidité (droite) -->
-  <div class="top-row">
-
-    <!-- Panneau filament -->
-    <div class="filament-panel">
-      <div class="panel-label">1 — Ton filament</div>
-
-      <div class="fil-select-wrap">
-        <select class="fil-select" id="fil-select">
-          <option value="">Choisir un filament…</option>
-          <option value="PLA">PLA</option>
-          <option value="PETG">PETG</option>
-          <option value="ABS">ABS</option>
-          <option value="ASA">ASA</option>
-          <option value="TPU">TPU</option>
-          <option value="Nylon">Nylon</option>
-        </select>
-      </div>
-
-      <div class="fil-info" id="fil-info">
-        <div class="fil-info-placeholder">Sélectionne un filament pour voir ses caractéristiques.</div>
-      </div>
-    </div>
-
-    <!-- Panneau humidité -->
-    <div class="humidity-panel">
-      <div class="panel-label">2 — Humidité ambiante</div>
-      <div>
-        <div class="humidity-value-row">
-          <div>
-            <span class="humidity-value" id="humidity-val">45</span>
-            <span class="humidity-unit">%</span>
-          </div>
-          <div class="humidity-zone" id="humidity-zone"></div>
-        </div>
-        <div class="slider-track-wrap">
-          <div class="slider-gradient"></div>
-          <input type="range" id="humidity-slider" min="0" max="100" value="45">
-          <div class="slider-thumb-h" id="humidity-thumb"></div>
-        </div>
-        <div class="humidity-zones-row">
-          <div class="hz-segment hz-dry">Sec</div>
-          <div class="hz-segment hz-normal">Normal</div>
-          <div class="hz-segment hz-humid">Humide</div>
-          <div class="hz-segment hz-wet">Très humide</div>
-        </div>
-      </div>
-    </div>
-
+  <!-- 1. Filament -->
+  <div class="input-block">
+    <div class="input-label">1 — Ton filament</div>
+    <div class="filament-grid" id="filament-grid"></div>
   </div>
 
-  <!-- 3. Signes visuels -->
+  <!-- 2. Humidité -->
+  <div class="input-block">
+    <div class="input-label">2 — Humidité ambiante</div>
+    <div class="humidity-wrap">
+      <div class="humidity-value-row">
+        <div>
+          <span class="humidity-value" id="humidity-val">45</span>
+          <span class="humidity-unit">%</span>
+        </div>
+        <div class="humidity-zone" id="humidity-zone"></div>
+      </div>
+      <div class="slider-track-wrap">
+        <div class="slider-gradient"></div>
+        <input type="range" id="humidity-slider" min="0" max="100" value="45">
+        <div class="slider-thumb-h" id="humidity-thumb"></div>
+      </div>
+      <div class="humidity-zones-row">
+        <div class="hz-segment hz-dry">Sec</div>
+        <div class="hz-segment hz-normal">Normal</div>
+        <div class="hz-segment hz-humid">Humide</div>
+        <div class="hz-segment hz-wet">Très humide</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Signes -->
   <div class="input-block">
     <div class="input-label">3 — Signes visuels <span class="input-optional">— optionnel, sélectionne ce que tu observes</span></div>
     <div class="signs-grid" id="signs-grid"></div>
@@ -343,6 +205,8 @@
   <div id="hub-footer"></div>
 </div>
 
+<script src="/assets/data.fr.js"></script>
+<script src="/assets/data.en.js"></script>
 <script src="/assets/components.js"></script>
 <script src="/assets/data.js"></script>
 <script>
@@ -352,7 +216,8 @@ renderFooter();
 /* ======================================================
    DONNÉES FILAMENTS SÉCHAGE
 ====================================================== */
-const FILAMENTS_SECHAGE = {
+/* FILAMENTS_SECHAGE chargé depuis data.js (FILAMENTS_SECHAGE_LANG) */
+const _FSDUMMY = {
   PLA: {
     label: 'PLA', color: '#F2641E', textColor: '#1A1510',
     sensitivityHumidity: 'low', hygroscopic: false,
@@ -421,20 +286,12 @@ const FILAMENTS_SECHAGE = {
   }
 };
 
-const SENSITIVITY_LABEL = {
-  low:      'Stable',
-  medium:   'Modéré',
-  high:     'Sensible',
-  very_high:'Très sensible',
-  extreme:  'Extrême'
-};
-
 const SIGNES = [
-  { id: 'bulles',   icon: '●', label: 'Bulles ou\nclaquements' },
-  { id: 'sousex',  icon: '∿', label: 'Sous-extrusion\nirrégulière' },
-  { id: 'cassant', icon: '✕', label: 'Filament\ncassant' },
-  { id: 'rugueux', icon: '◈', label: 'Surface\nrugueuse' },
-  { id: 'string',  icon: '≋', label: 'Stringing\nexcessif' },
+  { id: 'bulles',    icon: '●', label: 'Bulles ou\nclaquements' },
+  { id: 'sousex',   icon: '∿', label: 'Sous-extrusion\nirrégulière' },
+  { id: 'cassant',  icon: '✕', label: 'Filament\ncassant' },
+  { id: 'rugueux',  icon: '◈', label: 'Surface\nrugueuse' },
+  { id: 'string',   icon: '≋', label: 'Stringing\nexcessif' },
 ];
 
 /* ======================================================
@@ -446,7 +303,7 @@ let state = { filament: null, humidity: 45, signs: [] };
    CALCULS
 ====================================================== */
 function getUrgency(filamentKey, humidity, signs) {
-  const f = FILAMENTS_SECHAGE[filamentKey];
+  const f = FILAMENTS_SECHAGE_LANG[filamentKey];
   const s = signs.length;
   const sens = f.sensitivityHumidity;
 
@@ -478,15 +335,15 @@ function getUrgency(filamentKey, humidity, signs) {
 }
 
 function getDuration(filamentKey, humidity, signs) {
-  const f = FILAMENTS_SECHAGE[filamentKey];
+  const f = FILAMENTS_SECHAGE_LANG[filamentKey];
   const humFactor = Math.max(0, Math.min(1, (humidity - 20) / 80));
   const signBonus = signs.length * 1.5;
   let d = f.durationBase + humFactor * (f.durationMax - f.durationBase) + signBonus;
   d = Math.min(d, f.durationMax + 2);
-  return Math.round(d * 2) / 2;
+  return Math.round(d * 2) / 2; // arrondi à 0.5h
 }
 
-const URGENCY_META = {
+const _UMDUMMY = {
   non_necessaire: {
     color: '#4CAF50', textColor: '#fff',
     icon: '✦', level: 'Séchage non nécessaire',
@@ -500,7 +357,7 @@ const URGENCY_META = {
   recommande: {
     color: '#F2641E', textColor: '#1A1510',
     icon: '♨', level: 'Séchage recommandé',
-    sub: "Ton filament a probablement absorbé de l'humidité. Sèche-le avant d'imprimer."
+    sub: 'Ton filament a probablement absorbé de l\'humidité. Sèche-le avant d\'imprimer.'
   },
   urgent: {
     color: '#F8556B', textColor: '#1A1510',
@@ -509,56 +366,51 @@ const URGENCY_META = {
   }
 };
 
-const HUMIDITY_ZONES = [
-  { max: 35,  label: 'Sec',         cls: 'hz-dry'    },
-  { max: 55,  label: 'Normal',      cls: 'hz-normal'  },
-  { max: 70,  label: 'Humide',      cls: 'hz-humid'   },
-  { max: 101, label: 'Très humide', cls: 'hz-wet'     },
+const _HZDUMMY = [
+  { max: 35,  label: 'Sec',          cls: 'hz-dry'    },
+  { max: 55,  label: 'Normal',       cls: 'hz-normal'  },
+  { max: 70,  label: 'Humide',       cls: 'hz-humid'   },
+  { max: 101, label: 'Très humide',  cls: 'hz-wet'     },
 ];
+
 function getHumidityZone(h) {
-  return HUMIDITY_ZONES.find(z => h < z.max) || HUMIDITY_ZONES[HUMIDITY_ZONES.length - 1];
+  return HUMIDITY_ZONES_LANG.find(z => h < z.max) || HUMIDITY_ZONES_LANG[HUMIDITY_ZONES_LANG.length - 1];
 }
 
 /* ======================================================
-   RENDU — INFO FILAMENT
+   RENDU FILAMENTS
 ====================================================== */
-function renderFilamentInfo() {
-  const el = document.getElementById('fil-info');
-  const key = state.filament;
-  if (!key) {
-    el.innerHTML = `<div class="fil-info-placeholder">Sélectionne un filament pour voir ses caractéristiques.</div>`;
-    return;
-  }
-  const f = FILAMENTS_SECHAGE[key];
-  const sensitivityLabel = SENSITIVITY_LABEL[f.sensitivityHumidity];
-  el.innerHTML = `
-    <div class="fil-info-dot" style="background:${f.color};"></div>
-    <div class="fil-info-text">
-      <div class="fil-info-name">${f.label}</div>
-      <div class="fil-info-tags">
-        <span class="fil-tag">${f.tempMin}–${f.tempMax} °C</span>
-        <span class="fil-tag ${f.hygroscopic ? 'hygro' : ''}">${f.hygroscopic ? 'Hygroscopique' : 'Stable'}</span>
-        <span class="fil-tag">Humidité : ${sensitivityLabel}</span>
-      </div>
-    </div>`;
+function renderFilamentGrid() {
+  document.getElementById('filament-grid').innerHTML =
+    Object.entries(FILAMENTS_SECHAGE).map(([key, f]) => `
+      <div class="fil-card ${state.filament === key ? 'selected' : ''}"
+           onclick="selectFilament('${key}')"
+           style="${state.filament === key ? `box-shadow:5px 5px 0 ${f.color};` : ''}">
+        ${state.filament === key ? `<style>.fil-card[onclick="selectFilament('${key}')"]::before{background:${f.color};}</style>` : ''}
+        <div class="fil-dot" style="background:${f.color};"></div>
+        <div class="fil-name">${f.label}</div>
+        <div class="fil-hygro ${f.hygroscopic ? 'high' : ''}">${f.hygroscopic ? 'Hygro' : 'Stable'}</div>
+      </div>`).join('');
 }
 
 /* ======================================================
-   RENDU — SLIDER HUMIDITÉ
+   RENDU SLIDER HUMIDITÉ
 ====================================================== */
 function renderHumiditySlider() {
-  const h    = state.humidity;
-  const pct  = h / 100;
+  const h   = state.humidity;
+  const pct = h / 100;
   const zone = getHumidityZone(h);
+
   document.getElementById('humidity-val').textContent  = h;
-  document.getElementById('humidity-thumb').style.left = `calc(${pct * 100}%)`;
+  document.getElementById('humidity-thumb').style.left = `calc(${pct * 100}% )`;
+
   const zoneEl = document.getElementById('humidity-zone');
   zoneEl.textContent = zone.label;
   zoneEl.className   = 'humidity-zone ' + zone.cls;
 }
 
 /* ======================================================
-   RENDU — SIGNES VISUELS
+   RENDU SIGNES
 ====================================================== */
 function renderSigns() {
   document.getElementById('signs-grid').innerHTML = SIGNES.map(s => `
@@ -571,7 +423,7 @@ function renderSigns() {
 }
 
 /* ======================================================
-   RENDU — RÉSULTAT
+   RENDU RÉSULTAT
 ====================================================== */
 function renderResult() {
   const el = document.getElementById('result');
@@ -581,15 +433,23 @@ function renderResult() {
     return;
   }
 
-  const f        = FILAMENTS_SECHAGE[state.filament];
+  const f        = FILAMENTS_SECHAGE_LANG[state.filament];
   const urgency  = getUrgency(state.filament, state.humidity, state.signs);
-  const meta     = URGENCY_META[urgency];
+  const meta     = URGENCY_META_LANG[urgency];
   const duration = getDuration(state.filament, state.humidity, state.signs);
   const durationStr = duration % 1 === 0 ? `${duration}h` : `${duration}h`;
 
-  const tempStr = urgency === 'non_necessaire' ? '—' : `${f.tempIdeal} °C`;
-  const tempSub = urgency === 'non_necessaire' ? 'Séchage non requis' : `Plage : ${f.tempMin}–${f.tempMax} °C`;
-  const durationSub = urgency === 'non_necessaire' ? 'Séchage non requis' : `En fonction de l'humidité et des signes`;
+  const tempStr = urgency === 'non_necessaire'
+    ? '—'
+    : `${f.tempIdeal} °C`;
+
+  const tempSub = urgency === 'non_necessaire'
+    ? LANG === 'en' ? 'No drying required' : 'Séchage non requis'
+    : `Plage : ${f.tempMin}–${f.tempMax} °C`;
+
+  const durationSub = urgency === 'non_necessaire'
+    ? LANG === 'en' ? 'No drying required' : 'Séchage non requis'
+    : `En fonction de l'humidité et des signes`;
 
   const tipsHtml = f.tips.map(t =>
     `<div class="tip-row"><div class="tip-dot"></div><div class="tip-text">${t}</div></div>`
@@ -626,15 +486,14 @@ function renderResult() {
 /* ======================================================
    ACTIONS
 ====================================================== */
-document.getElementById('fil-select').addEventListener('change', e => {
-  state.filament = e.target.value || null;
+function selectFilament(key) {
+  state.filament = key;
   render();
-  if (state.filament) {
-    setTimeout(() => {
-      document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 50);
-  }
-});
+  // Scroll vers le résultat sur mobile
+  setTimeout(() => {
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
 
 function toggleSign(id) {
   const i = state.signs.indexOf(id);
@@ -652,7 +511,7 @@ document.getElementById('humidity-slider').addEventListener('input', e => {
    RENDER GLOBAL
 ====================================================== */
 function render() {
-  renderFilamentInfo();
+  renderFilamentGrid();
   renderHumiditySlider();
   renderSigns();
   renderResult();

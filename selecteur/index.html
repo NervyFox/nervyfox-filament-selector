@@ -129,6 +129,8 @@
 <div class="wrap"><div id="app"></div></div>
 <div id="hub-footer" style="max-width:820px;margin:0 auto;padding:0 24px;"></div>
 
+<script src="/assets/data.fr.js"></script>
+<script src="/assets/data.en.js"></script>
 <script src="/assets/components.js"></script>
 <script src="/assets/data.js"></script>
 <script>
@@ -253,17 +255,17 @@ function render() {
     app.innerHTML = `<div class="${anim}">
       <div class="recap">${recapHtml()}</div>
       <div class="result-hero" style="border:2.5px solid ${f.color};box-shadow:8px 8px 0 ${f.color};">
-        <div class="result-eyebrow">Ton filament idéal</div>
+        <div class="result-eyebrow">${LANG === 'en' ? 'Your ideal filament' : 'Ton filament idéal'}</div>
         <div class="result-name" style="color:${f.color};">${key}</div>
-        <div class="result-tagline">C'est le filament qu'il te faut.</div>
+        <div class="result-tagline">${LANG === 'en' ? 'This is the filament you need.' : 'C\'est le filament qu\'il te faut.'}</div>
         <div class="result-desc">${f.core}</div>
       </div>
       <div class="strength-box">
-        <div class="strength-title">Ses points forts</div>
+        <div class="strength-title">${LANG === 'en' ? 'Its strengths' : 'Ses points forts'}</div>
         ${strengthBarsHtml(f.scores, barCol)}
       </div>
       <div class="alt-box">
-        <div class="alt-box-title">Pourquoi pas les autres ?</div>
+        <div class="alt-box-title">${LANG === 'en' ? 'Why not the others?' : 'Pourquoi pas les autres ?'}</div>
         ${others.map(k => {
           const o = FILAMENTS[k];
           return `<div class="alt-row">
@@ -276,9 +278,9 @@ function render() {
         <a class="btn-cta" href="${f.affiliateLink || '#'}"
           target="${f.affiliateLink ? '_blank' : '_self'}" rel="noopener"
           ${f.affiliateLink ? '' : 'onclick="return false;"'}>
-          Voir le filament recommandé →
+          ${LANG === 'en' ? 'See the recommended filament →' : 'Voir le filament recommandé →'}
         </a>
-        <div><span class="btn-restart" onclick="restart()">↺ Refaire le test</span></div>
+        <div><span class="btn-restart" onclick="restart()">↺ ${LANG === 'en' ? 'Retake the test' : 'Refaire le test'}</span></div>
       </div>
     </div>`;
     return;
@@ -300,8 +302,8 @@ function render() {
     const hasConstraints = constraints.length > 0;
     content = `
       <div class="constraint-helper">${hasConstraints
-        ? `${constraints.length}/3 sélectionnée${constraints.length > 1 ? 's' : ''}`
-        : 'Sélectionne jusqu\'à 3 contraintes, ou passe directement.'
+        ? (LANG === 'en' ? `${constraints.length}/3 selected` : `${constraints.length}/3 sélectionnée${constraints.length > 1 ? 's' : ''}`)
+        : (LANG === 'en' ? 'Select up to 3 constraints, or skip.' : 'Sélectionne jusqu\'à 3 contraintes, ou passe directement.')
       }</div>
       <div class="grid cols-2">${Q_CONSTRAINTS.map(o => {
         const sel = constraints.includes(o.id);
@@ -310,7 +312,7 @@ function render() {
       <div class="btn-none-wrap">
         <button class="btn-none ${!hasConstraints ? 'active' : ''}" onclick="skipConstraints()">
           <span class="btn-none-icon">○</span>
-          Aucune contrainte physique — passer à l'étape suivante
+          ${LANG === 'en' ? 'No physical constraints — skip to next step' : 'Aucune contrainte physique — passer à l\'étape suivante'}
         </button>
       </div>`;
   } else if (step === 4) {
@@ -328,9 +330,9 @@ function render() {
     <div class="progress">${pbar}</div>
     ${content}
     <div class="step-nav">
-      <div class="btn-back ${step === 1 ? 'hidden' : ''}" onclick="back()">← Retour</div>
+      <div class="btn-back ${step === 1 ? 'hidden' : ''}" onclick="back()">← ${LANG === 'en' ? 'Back' : 'Retour'}</div>
       <div class="btn-next ${ok ? 'ok' : ''}" onclick="next()">
-        ${step === 5 ? 'Voir mon résultat →' : 'Suivant →'}
+        ${step === 5 ? (LANG === 'en' ? 'See my result →' : 'Voir mon résultat →') : (LANG === 'en' ? 'Next →' : 'Suivant →')}
       </div>
     </div>
   </div>`;
