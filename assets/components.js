@@ -14,7 +14,7 @@ const NAV_PAGES = [
   { id: 'diagnostique',fr: 'Diagnostique',        en: 'Diagnostic',        href: '/diagnostique/' },
 ];
 
-const LANG = localStorage.getItem('nf-lang') || 'fr';
+var LANG = localStorage.getItem('nf-lang') || 'fr';
 
 function setLang(lang) {
   localStorage.setItem('nf-lang', lang);

@@ -3,34 +3,33 @@
    Loader : charge la bonne langue + données communes
 ====================================================== */
 
-/* Langue active — lue depuis localStorage, défaut FR */
-const LANG = localStorage.getItem('nf-lang') || 'fr';
-const IS_EN = LANG === 'en';
+/* IS_EN lu depuis la variable LANG définie dans components.js */
+var IS_EN = (localStorage.getItem('nf-lang') || 'fr') === 'en';
 
 /* === FILAMENTS === */
-const FILAMENTS     = IS_EN ? FILAMENTS_EN     : FILAMENTS_FR;
-const SCORE_LABELS  = IS_EN ? SCORE_LABELS_EN  : SCORE_LABELS_FR;
-const ALL_FILAMENTS = Object.keys(FILAMENTS);
+var FILAMENTS     = IS_EN ? FILAMENTS_EN     : FILAMENTS_FR;
+var SCORE_LABELS  = IS_EN ? SCORE_LABELS_EN  : SCORE_LABELS_FR;
+var ALL_FILAMENTS = Object.keys(FILAMENTS);
 
 /* === SÉLECTEUR === */
-const Q_TYPE        = IS_EN ? Q_TYPE_EN        : Q_TYPE_FR;
-const Q_ENV         = IS_EN ? Q_ENV_EN         : Q_ENV_FR;
-const Q_CONSTRAINTS = IS_EN ? Q_CONSTRAINTS_EN : Q_CONSTRAINTS_FR;
-const Q_FINISH      = IS_EN ? Q_FINISH_EN      : Q_FINISH_FR;
-const Q_LEVEL       = IS_EN ? Q_LEVEL_EN       : Q_LEVEL_FR;
-const STEP_META     = IS_EN ? STEP_META_EN     : STEP_META_FR;
+var Q_TYPE        = IS_EN ? Q_TYPE_EN        : Q_TYPE_FR;
+var Q_ENV         = IS_EN ? Q_ENV_EN         : Q_ENV_FR;
+var Q_CONSTRAINTS = IS_EN ? Q_CONSTRAINTS_EN : Q_CONSTRAINTS_FR;
+var Q_FINISH      = IS_EN ? Q_FINISH_EN      : Q_FINISH_FR;
+var Q_LEVEL       = IS_EN ? Q_LEVEL_EN       : Q_LEVEL_FR;
+var STEP_META     = IS_EN ? STEP_META_EN     : STEP_META_FR;
 
 /* === SÉCHAGE === */
-const FILAMENTS_SECHAGE_LANG = IS_EN ? FILAMENTS_SECHAGE_EN : FILAMENTS_SECHAGE_FR;
-const URGENCY_META_LANG      = IS_EN ? URGENCY_META_EN      : URGENCY_META_FR;
-const HUMIDITY_ZONES_LANG    = IS_EN ? HUMIDITY_ZONES_EN    : HUMIDITY_ZONES_FR;
-const SENSITIVITY_LABEL_LANG = IS_EN ? SENSITIVITY_LABEL_EN : SENSITIVITY_LABEL_FR;
+var FILAMENTS_SECHAGE_LANG = IS_EN ? FILAMENTS_SECHAGE_EN : FILAMENTS_SECHAGE_FR;
+var URGENCY_META_LANG      = IS_EN ? URGENCY_META_EN      : URGENCY_META_FR;
+var HUMIDITY_ZONES_LANG    = IS_EN ? HUMIDITY_ZONES_EN    : HUMIDITY_ZONES_FR;
+var SENSITIVITY_LABEL_LANG = IS_EN ? SENSITIVITY_LABEL_EN : SENSITIVITY_LABEL_FR;
 
 /* === COULEURS === */
-const COMBINATIONS_LANG = IS_EN ? COMBINATIONS_EN : COMBINATIONS_FR;
+var COMBINATIONS_LANG = IS_EN ? COMBINATIONS_EN : COMBINATIONS_FR;
 
 /* === DIAGNOSTIQUE === */
-const DEFAUTS = IS_EN ? DEFAUTS_EN : DEFAUTS_FR;
+var DEFAUTS = IS_EN ? DEFAUTS_EN : DEFAUTS_FR;
 
 /* ======================================================
    ARBRE DE DÉCISION (commun aux deux langues)
@@ -58,7 +57,7 @@ function decideFilament(type, env, constraints, finition, level) {
 /* ======================================================
    DONNÉES DIAGNOSTIQUE (communes, textes dans data.fr/en)
 ====================================================== */
-const DIAG_DATA = {
+var DIAG_DATA = {
   warping: {
     all: {
       dd: [
